@@ -25,4 +25,10 @@ pnpm-debug.log*
 # ignore Jampack cache files
 .jampack/
 /.idea/**
-/nohup.out
+.wrangler/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

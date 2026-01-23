@@ -1,7 +1,5 @@
-import satori, { SatoriOptions } from "satori";
+import satori, { type SatoriOptions } from "satori";
 import { SITE } from "@config";
-import { writeFile } from "node:fs/promises";
-import { Resvg } from "@resvg/resvg-js";
 
 const fetchFonts = async () => {
   // Regular Font
@@ -139,20 +137,7 @@ const generateOgImage = async (mytext = SITE.title) => {
   const sanitizedText = `${mytext
     .replace(/[/\\?%*:|"<> ]/g, "-")
     .replace("--", "-")}`;
-  const imageName = `${sanitizedText}.png`;
   const svg = await satori(ogImage(sanitizedText), options);
-
-  // render png in production mode
-  if (import.meta.env.MODE === "production") {
-    const resvg = new Resvg(svg);
-    const pngData = resvg.render();
-    const pngBuffer = pngData.asPng();
-
-    console.info("Output PNG Image  :", `${imageName}`);
-
-    await writeFile(`./dist/${imageName}`, pngBuffer);
-  }
-
   return svg;
 };
 
