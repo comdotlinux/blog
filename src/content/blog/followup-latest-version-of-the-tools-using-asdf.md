@@ -15,7 +15,7 @@ ogImage: "Tools"
 description: "Tools"
 ---
 
-[![A Comic By by Monkey User about a Final patch in production](../../assets/20221010/104-final-patch.png)](https://www.monkeyuser.com/2018/final-patch)
+[![A Comic By by Monkey User about a Final patch in production](https://www.monkeyuser.com/assets/images/2018/104-final-patch.png)](https://www.monkeyuser.com/2018/final-patch)
 
 Disclaimer!: This post only talks about `asdf` .  
 afx is also quite new to me too and I don't have enough experience to help you out, maybe you can let me know or point
@@ -114,7 +114,7 @@ In action
 This too does not update the versions in the `.tool-versions` file, but probably is not too hard to add that in. This
 exercise is left for the reader (I've always wanted to say that)
 
-[![A monkeyuser comic on backlogs](../../assets/20221010/236-buglog.png)](https://www.monkeyuser.com/2022/buglog)
+[![A monkeyuser comic on backlogs](https://www.monkeyuser.com/assets/images/2022/236-buglog.png)](https://www.monkeyuser.com/2022/buglog)
 
 ## Extro
 

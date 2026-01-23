@@ -11,9 +11,7 @@ export default defineConfig({
   site: SITE.website,
   integrations: [
     tailwind({
-      config: {
-        applyBaseStyles: false,
-      },
+      applyBaseStyles: false,
     }),
     react(),
     sitemap(),
@@ -31,12 +29,6 @@ export default defineConfig({
     shikiConfig: {
       theme: "one-dark-pro",
       wrap: true,
-    },
-    extendDefaultPlugins: true,
-  },
-  vite: {
-    optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
     },
   },
 });

@@ -13,7 +13,7 @@ ogImage: "Tools"
 description: "Tools"
 ---
 
-![Gradle Logo](../../assets/20221126/gradle-logo.png)
+![Gradle Logo](https://gradle.org/images/gradle-knowledge-graph-logo.png)
 
 [Gradle](https://docs.gradle.org/current/userguide/what_is_gradle.html) is a build tool that (at least to me) feels like it is both very easy and at the same time almost impossible to understand. Can't say for sure about anyone else but when that happens to me, I simply end up with some things that seem to work for me well enough that I stop looking into them any more than that (Until the next itch of course!)
 
@@ -141,7 +141,7 @@ If you are not queasy about uploading to gradle your builds, I would recommend t
 
 I'm sure you have your "recipes" and I'm looking forward to any other interesting things you do with gradle that are useful and worth nothing them down.
 
-[![Small Delights Moknkey User Comic](../../assets/20221126/small-delights.png)](https://www.monkeyuser.com/2022/small-delights)
+[![Small Delights Moknkey User Comic](https://www.monkeyuser.com/assets/images/2022/227-small-delights.png)](https://www.monkeyuser.com/2022/small-delights/)
 
 That's it for this entry, Have a nice one!
 

@@ -68,7 +68,7 @@ jobs:
 
 If You now try to [run](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow?tool=webui) the workflow you should see something like below:
 
-![Workflow Dispatch](../../assets/20221227/workflow-dispatch-inputs.png)
+<!-- Image placeholder: workflow-dispatch-inputs.png was missing - see GitHub docs for workflow dispatch UI -->
 
 The Example and The Image are Straight out of the GitHub Actions Documentation.  
 What is Interesting is  
@@ -85,7 +85,7 @@ Check [Reviewing Deployments](https://docs.github.com/en/actions/managing-workfl
 
 For Some time now there was a [way](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action) to write your own action and have anyone (if public) to use it and even have it listed and searchable on the [Actions Marketplace](https://github.com/marketplace?type=actions) and a [Dockerfile](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action) action and they are great when one wants to do that but are quite involved (at least the JavaScript ones are for me) but what does one do when there are things that one might (or might not) want to publish and might (or might not) want to keep in the same repository using the action. Which is usually the case when working with a company and probably a private repo? That was a long question but has a not quite long answer, [composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action).
 
-![Github Composite Action](../../assets/20221227/GithubCompositeAction.png)
+<!-- Image placeholder: GithubCompositeAction.png was missing -->
 
 The full code is here in this repository : [composite-actions-example](https://github.com/comdotlinux/composite-actions-example)
 
@@ -139,7 +139,7 @@ jobs:
 
 The Output should be something like below
 
-![Composite Input Output Test](../../assets/20221227/CompositeInputOutputTest.png)
+<!-- Image placeholder: CompositeInputOutputTest.png was missing -->
 
 There are limitations to Composite Actions, like not being able to have access to secrets that limit the usability in some cases, as any passed in variable is not masked and not subjected to the same strict secret guidelines.
 
@@ -190,6 +190,6 @@ The Basics are
 
 That's it for now there are tons of features but these are the lesser known ones or at least ones not easily found.
 
-[![Meaning Comic Monkey User](../../assets/20221227/meaning.png)](https://www.monkeyuser.com/2021/meaning)
+[![Meaning Comic Monkey User](https://www.monkeyuser.com/assets/images/2021/210-meaning.png)](https://www.monkeyuser.com/2021/meaning/)
 
 ---

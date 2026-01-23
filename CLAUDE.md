@@ -4,33 +4,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog built with AstroPaper, an Astro-based static site generator. The blog is deployed to Cloudflare Pages at https://b.kulkarni.cloud/.
+This is a personal blog built with AstroPaper, an Astro 6 Beta-based static site generator. The blog is deployed to Cloudflare Pages at https://b.kulkarni.cloud/.
+
+**Stack:** Astro 6 Beta + React + TypeScript + TailwindCSS + Bun
 
 ## Commands
 
 | Command | Purpose |
 |---------|---------|
-| `npm run dev` | Start dev server at localhost:3000 |
-| `npm run build` | Build production site to `./dist/` |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check formatting without fixing |
-| `npm run cz` | Commit with commitizen (conventional commits) |
-| `npm run sync` | Generate TypeScript types for Astro modules |
+| `bun run dev` | Start dev server at localhost:4321 |
+| `bun run build` | Build production site to `./dist/` |
+| `bun run preview` | Preview production build locally |
+| `bun run lint` | Run ESLint (flat config) |
+| `bun run lint:fix` | Run ESLint with auto-fix |
+| `bun run format` | Format code with Prettier |
+| `bun run format:check` | Check formatting without fixing |
+| `bun run test` | Run tests with Vitest |
+| `bun run test:run` | Run tests once |
+| `bun run cz` | Commit with commitizen (conventional commits) |
+| `bun run sync` | Generate TypeScript types for Astro modules |
 
 ## Architecture
 
-**Tech Stack:** Astro + React + TypeScript + TailwindCSS
-
 **Key Directories:**
 - `src/content/blog/` - Markdown blog posts with YAML frontmatter
+- `src/content.config.ts` - Content collection configuration (Astro 6 Content Layer API)
+- `src/content/_schemas.ts` - Zod schema for blog post frontmatter validation
 - `src/components/` - Astro (server) and React (interactive) components
 - `src/layouts/` - Page layout templates
 - `src/pages/` - Route definitions
 - `src/utils/` - Utility functions (sorting, slugifying, pagination, OG image generation)
 - `src/config.ts` - Site configuration (title, author, socials, posts per page)
-- `src/content/_schemas.ts` - Zod schema for blog post frontmatter validation
 
 **Component Pattern:** Astro components (`.astro`) for static content, React components (`.tsx`) for interactive features (Search, Card, Datetime).
 
@@ -63,5 +67,21 @@ ogImage: string (optional)
 
 ## Git Workflow
 
-- Uses conventional commits via commitizen (`npm run cz`)
+- Uses conventional commits via commitizen (`bun run cz`)
 - Pre-commit hooks run Prettier via lint-staged
+
+## Astro 6 Content Layer API
+
+Content collections use the new Content Layer API:
+- Config file at `src/content.config.ts` (not `src/content/config.ts`)
+- Uses `glob` loader: `loader: glob({ pattern: "**/*.md", base: "./src/content/blog" })`
+- Zod imported from `astro/zod` (not `astro:content`)
+- Render method: `import { render } from "astro:content"; const { Content } = await render(post);`
+
+## Tooling
+
+- **Package Manager:** Bun 1.3.6
+- **Runtime:** Node.js 24.13.0 (for Astro internals)
+- **ESLint:** v9 with flat config (`eslint.config.js`)
+- **Prettier:** v3 with Astro and Tailwind plugins
+- **Testing:** Vitest
