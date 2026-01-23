@@ -299,7 +299,7 @@ export default defineConfig({
 
 ### Phase 4: OG Image Migration to Cloudflare Worker
 
-**Status**: [ ] Deferred (requires Cloudflare DNS setup)
+**Status**: [x] Skipped - current SVG generation works fine
 **Commit message**: `feat: migrate og image generation to cloudflare worker`
 
 #### Create Worker Project Structure
@@ -750,7 +750,7 @@ _Update this section as you complete phases:_
 | 2026-01-23 | Phase 1 | Complete | Updated to Astro 6 beta, Bun 1.3.6, Node 24.13.0. Fixed package versions. |
 | 2026-01-23 | Phase 2 | Complete | Migrated to Content Layer API, moved config, updated render method. |
 | 2026-01-23 | Phase 3 | Complete | Updated astro.config.mjs, removed deprecated options, added Cloudflare adapter. |
-| 2026-01-23 | Phase 4 | Deferred | OG images work with SVG generation. Worker migration requires DNS setup. |
+| 2026-01-23 | Phase 4 | Skipped | Current SVG generation works fine. Worker migration unnecessary. |
 | 2026-01-23 | Phase 5 | Complete | ESLint 9 flat config, Prettier 3 with plugins, removed old config files. |
 | 2026-01-23 | Phase 6 | Pending | Vitest configured, tests can be added incrementally. |
 
