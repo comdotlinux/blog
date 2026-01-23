@@ -19,7 +19,7 @@ description: "Tools"
 
 You have heard of **[tmux](https://github.com/tmux/tmux/wiki)**, you have haven't you? If not then surely you have heard of **[screen](https://www.gnu.org/software/screen/)**? Maybe you used **[byobu](https://www.byobu.org/)**? If the answer to any of these is: Yes Of Course I have my own custom setup and don't like to customize too much, or even read too much then this post is not for you ;) Here's a comic for you while you leave to do whatever that you want to do then. Au Revoir
 
-[![Zenos Progress](https://www.monkeyuser.com/assets/images/2018/96-zenos-progress.png)](https://www.monkeyuser.com/2018/zenos-progress/)
+[![Zenos Progress](https://www.monkeyuser.com/2018/zenos-progress/96-zenos-progress.png)](https://www.monkeyuser.com/2018/zenos-progress/)
 
 This is going to be a long one
 

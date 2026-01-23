@@ -141,7 +141,7 @@ If you are not queasy about uploading to gradle your builds, I would recommend t
 
 I'm sure you have your "recipes" and I'm looking forward to any other interesting things you do with gradle that are useful and worth nothing them down.
 
-[![Small Delights Moknkey User Comic](https://www.monkeyuser.com/assets/images/2022/227-small-delights.png)](https://www.monkeyuser.com/2022/small-delights/)
+[![Small Delights Monkey User Comic](https://www.monkeyuser.com/2022/small-delights/245-small-delights.png)](https://www.monkeyuser.com/2022/small-delights/)
 
 That's it for this entry, Have a nice one!
 

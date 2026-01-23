@@ -190,6 +190,6 @@ The Basics are
 
 That's it for now there are tons of features but these are the lesser known ones or at least ones not easily found.
 
-[![Meaning Comic Monkey User](https://www.monkeyuser.com/assets/images/2021/210-meaning.png)](https://www.monkeyuser.com/2021/meaning/)
+[![Meaning Comic Monkey User](https://www.monkeyuser.com/2021/meaning/224-meaning.png)](https://www.monkeyuser.com/2021/meaning/)
 
 ---
