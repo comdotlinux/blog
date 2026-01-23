@@ -19,7 +19,7 @@ description: "Tools"
 
 You have heard of **[tmux](https://github.com/tmux/tmux/wiki)**, you have haven't you? If not then surely you have heard of **[screen](https://www.gnu.org/software/screen/)**? Maybe you used **[byobu](https://www.byobu.org/)**? If the answer to any of these is: Yes Of Course I have my own custom setup and don't like to customize too much, or even read too much then this post is not for you ;) Here's a comic for you while you leave to do whatever that you want to do then. Au Revoir
 
-[![Zenos Progress](https://www.monkeyuser.com/2018/zenos-progress/96-zenos-progress.png)](https://www.monkeyuser.com/2018/zenos-progress/)
+[![Zenos Progress](/assets/20221112/96-zenos-progress.png)](https://www.monkeyuser.com/2018/zenos-progress/)
 
 This is going to be a long one
 
@@ -61,13 +61,13 @@ But, I am usually using the terminal locally and would like to see some better v
 
 As with almost everything Gnu / Linux there's a configuration file for that named `.tmux.conf`
 
-[![x11](https://imgs.xkcd.com/comics/x11.png)](https://xkcd.com/963/)
+[![x11](/assets/20221112/x11.png)](https://xkcd.com/963/)
 
 A joke about X11 Config File
 
 But first setting some expectations, we are going to leave the Mac Users Behind (only for this section), or at least allow them to find their own way hereafter, as I'm not sure how to install the packages on Mac. O.K. Let's continue
 
-<!-- Image placeholder: ok_okay_ok.png was missing -->
+![OK Okay OK](/assets/20221112/ok_okay_ok.png)
 
 [Powerline](https://fedoramagazine.org/add-power-terminal-powerline/), I heard about this from the blog of my first [`Moonsh`ine](https://en.wikipedia.org/wiki/Fedora_Linux_release_history#Fedora_Linux_7) and co-incidentally also [current Linux Distro](https://en.wikipedia.org/wiki/Fedora_Linux_release_history#Fedora_Linux_36) - [Fedora](https://getfedora.org/en/workstation/), Namely their excellent [Fedora Magazine](https://fedoramagazine.org). So let's install powerline
 
@@ -108,7 +108,7 @@ By No means even scratching the surface of the commands available but these are 
 
 ## So What's next? Fireworks? Nope even better ;)
 
-[![Automation](https://imgs.xkcd.com/comics/automation.png)](https://xkcd.com/1319/)
+[![Automation](/assets/20221112/automation.png)](https://xkcd.com/1319/)
 
 Another XKCD joke about automation
 
@@ -126,7 +126,7 @@ The Developer Setup That You Need on Every Restart of a Computer / Every Restart
     <iframe style="width: 80%; height: 35vh;" src="https://www.youtube-nocookie.com/embed/tRRQENJeYQY" title="A video of the previously created .tmux.conf in action" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-<!-- Image placeholder: TmuxEverywhere.gif was missing -->
+![Tmux Everywhere](/assets/20221112/TmuxEverywhere.gif)
 
 Yes, You can use tmux to do whatever you want, start any program, any server and as many windows + sub panes and easily navigate between them. Let's list some benefits before we go?
 
@@ -141,7 +141,7 @@ Yes, You can use tmux to do whatever you want, start any program, any server and
 Also, Apologies for the XKCD comics, I just love [Randall](https://en.wikipedia.org/wiki/Randall_Munroe), and [xkcd](https://xkcd.com/) and cannot help myself.  
 Go Buy [What-If](https://xkcd.com/what-if/) and [What-If 2](https://xkcd.com/what-if-2/) (No affiliations or sponsorship's by the way, like i'm gonna get sponsorship's :p )
 
-<!-- Image placeholder: XKCD-everywhere.gif was missing -->
+![XKCD Everywhere](/assets/20221112/XKCD-everywhere.gif)
 
 Now, I'm by no mean an expert on `tmux` I just think it is sufficiently cool and customizable that it helps a lot in my daily development. Also quite new at blogging and being a poser who thinks that I know something that someone else does not, so please do criticize but with love if possible :)
 

@@ -755,8 +755,9 @@ _Update this section as you complete phases:_
 | 2026-01-23 | Phase 6 | Pending | Vitest configured, tests can be added incrementally. |
 
 ### Additional Fixes Applied
-- Fixed missing images in blog posts (replaced with external URLs or placeholders)
+- Updated blog post images to use local assets from `public/assets/` instead of external URLs
 - Updated RSS handler from `get` to `GET` for Astro 6
 - Updated API routes to return Response objects
 - Fixed type imports and ESLint issues
 - Added `"type": "module"` to package.json
+- Fixed React/Babel compatibility by updating `@astrojs/react` to 5.0.0-beta.2

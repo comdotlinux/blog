@@ -24,7 +24,7 @@ Impatient? then these are the tools we will discuss
 
 We developers love tools, we like to create them, use them and hope that they make our lives better as we are going about our day doing the things we do. You know don't you? "Working Hard or Hardly Working" -- I don't know who said that but I use it every chance I get.
 
-<!-- Image placeholder: DALL-E generated image "so-many-tools-and-tool-boxes-high-quality-digital-art.png" was missing -->
+![So many tools and tool boxes](/assets/20221008/so-many-tools-and-tool-boxes-high-quality-digital-art.png)
 
 ## Intro
 
@@ -231,7 +231,7 @@ github:
 
 Here is my [**Gist**](https://gist.github.com/comdotlinux/bdd4a1a565280a87639dbf740b94f009) (Sometimes not shown properly when embedded)
 
-<!-- Image placeholder: DALL-E generated image "nicely-arranged-tools-and-tool-boxes-high-quality-digital-art.png" was missing -->
+![Nicely arranged tools and tool boxes](/assets/20221008/nicely-arranged-tools-and-tool-boxes-high-quality-digital-art.png)
 
 ## Extro
 

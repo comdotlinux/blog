@@ -25,4 +25,4 @@ pnpm-debug.log*
 # ignore Jampack cache files
 .jampack/
 /.idea/**
-/nohup.out.wrangler/
+.wrangler/
