@@ -1,6 +1,6 @@
 # Developer Musings
 
-Personal blog built with AstroPaper, deployed at [b.kulkarni.cloud](https://b.kulkarni.cloud/)
+Personal blog built with AstroPaper, deployed at [blog.kulkarni.cloud](https://blog.kulkarni.cloud/)
 
 ## Tech Stack
 

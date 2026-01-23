@@ -8,7 +8,6 @@ test.describe("Homepage", () => {
 
   test("displays blog posts", async ({ page }) => {
     await page.goto("/");
-    // Cards are rendered as li elements
     const posts = page.locator("ul li a h2, ul li a h3");
     await expect(posts.first()).toBeVisible();
   });
@@ -16,22 +15,13 @@ test.describe("Homepage", () => {
   test("has working navigation links", async ({ page }) => {
     await page.goto("/");
 
-    // Check Posts link (without trailing slash)
-    const postsLink = page.locator('nav a[href="/posts"]');
-    await expect(postsLink).toBeVisible();
-
-    // Check Tags link
-    const tagsLink = page.locator('nav a[href="/tags"]');
-    await expect(tagsLink).toBeVisible();
-
-    // Check About link
-    const aboutLink = page.locator('nav a[href="/about"]');
-    await expect(aboutLink).toBeVisible();
+    await expect(page.locator('nav a[href="/posts"]')).toBeVisible();
+    await expect(page.locator('nav a[href="/tags"]')).toBeVisible();
+    await expect(page.locator('nav a[href="/about"]')).toBeVisible();
   });
 
   test("displays social links", async ({ page }) => {
     await page.goto("/");
-    // Check that social links section exists
     const socialLinks = page.locator('a[href*="github.com"]');
     await expect(socialLinks.first()).toBeVisible();
   });

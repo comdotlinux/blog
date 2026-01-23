@@ -11,7 +11,6 @@ describe("slugifyStr", () => {
   });
 
   it("handles multiple spaces", () => {
-    // github-slugger converts each space to a dash
     expect(slugifyStr("Multiple   Spaces")).toBe("multiple---spaces");
   });
 

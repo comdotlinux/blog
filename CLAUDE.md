@@ -70,6 +70,10 @@ ogImage: string (optional)
 - Uses conventional commits via commitizen (`bun run cz`)
 - Pre-commit hooks run Prettier via lint-staged
 
+## Code Style
+
+- **No useless comments:** Do not add obvious or redundant comments that merely restate what the code does. Comments should only explain non-obvious logic or provide important context.
+
 ## Astro 6 Content Layer API
 
 Content collections use the new Content Layer API:

@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import getSortedPosts from "../../src/utils/getSortedPosts";
 import type { CollectionEntry } from "astro:content";
 
-// Helper to create mock posts
 const createMockPost = (
   id: string,
   pubDatetime: Date,
@@ -61,10 +60,7 @@ describe("getSortedPosts", () => {
 
   it("handles posts with same date", () => {
     const sameDate = new Date("2024-01-01");
-    const posts = [
-      createMockPost("a", sameDate),
-      createMockPost("b", sameDate),
-    ];
+    const posts = [createMockPost("a", sameDate), createMockPost("b", sameDate)];
 
     const sorted = getSortedPosts(posts);
     expect(sorted.length).toBe(2);

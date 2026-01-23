@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import getPostsByTag from "../../src/utils/getPostsByTag";
 import type { CollectionEntry } from "astro:content";
 
-// Helper to create mock posts
 const createMockPost = (id: string, tags: string[]): CollectionEntry<"blog"> =>
   ({
     id,

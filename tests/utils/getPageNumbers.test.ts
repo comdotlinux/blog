@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 
-// Mock the config module
 vi.mock("@config", () => ({
   SITE: {
     postPerPage: 3,

@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import getUniqueTags from "../../src/utils/getUniqueTags";
 import type { CollectionEntry } from "astro:content";
 
-// Helper to create mock posts
 const createMockPost = (
   id: string,
   tags: string[],

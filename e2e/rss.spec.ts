@@ -12,8 +12,6 @@ test.describe("RSS Feed", () => {
     await page.goto("/rss.xml");
 
     const content = await page.content();
-
-    // Check for RSS structure
     expect(content).toContain("<rss");
     expect(content).toContain("<channel>");
     expect(content).toContain("<item>");

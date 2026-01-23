@@ -6,8 +6,6 @@ const distDir = join(process.cwd(), "dist");
 
 describe("Build Output", () => {
   beforeAll(() => {
-    // Build is expected to have been run before tests
-    // If dist doesn't exist, skip these tests
     if (!existsSync(distDir)) {
       console.log("Run `bun run build` before running build tests");
     }

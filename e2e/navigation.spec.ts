@@ -32,10 +32,7 @@ test.describe("Navigation", () => {
   test("logo/title navigates to home", async ({ page }) => {
     await page.goto("/posts/");
 
-    // Click on the site title/logo to go home
-    const homeLink = page.locator('a.logo, header a[href="/"]').first();
-    await homeLink.click();
-
+    await page.locator('a.logo, header a[href="/"]').first().click();
     await expect(page).toHaveURL("/");
   });
 
@@ -43,14 +40,11 @@ test.describe("Navigation", () => {
     await page.goto("/about/");
 
     await expect(page).toHaveURL(/\/about/);
-    const content = page.locator("main");
-    await expect(content).toBeVisible();
+    await expect(page.locator("main")).toBeVisible();
   });
 
   test("404 page shows for invalid routes", async ({ page }) => {
     const response = await page.goto("/this-page-does-not-exist/");
-
-    // Should get 404 status or show 404 content
     expect(response?.status()).toBe(404);
   });
 });
