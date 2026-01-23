@@ -85,3 +85,26 @@ Content collections use the new Content Layer API:
 - **ESLint:** v9 with flat config (`eslint.config.js`)
 - **Prettier:** v3 with Astro and Tailwind plugins
 - **Testing:** Vitest
+
+## Cloudflare Pages Deployment
+
+- **Build command:** `bun install && bun run build`
+- **Output directory:** `dist`
+- **Versions:** Managed via `.tool-versions` (Cloudflare reads this automatically)
+
+The `.tool-versions` file specifies:
+```
+nodejs 24.13.0
+bun 1.3.6
+```
+
+## Static Assets
+
+Images for blog posts are stored in `public/assets/` organized by date:
+- `public/assets/20221008/` - DALL-E generated images
+- `public/assets/20221010/` - MonkeyUser comics
+- `public/assets/20221112/` - XKCD comics, tmux images
+- `public/assets/20221126/` - Gradle post images
+- `public/assets/20221227/` - GitHub Actions screenshots
+
+Reference in markdown as `/assets/YYYYMMDD/filename.png`
