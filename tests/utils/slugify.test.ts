@@ -43,6 +43,7 @@ describe("slugify (default export)", () => {
       postSlug: "custom-slug",
       description: "Test",
       pubDatetime: new Date(),
+      tags: ["test"],
     };
     expect(slugify(post)).toBe("custom-slug");
   });
@@ -52,6 +53,7 @@ describe("slugify (default export)", () => {
       title: "My Post Title",
       description: "Test",
       pubDatetime: new Date(),
+      tags: ["test"],
     };
     expect(slugify(post)).toBe("my-post-title");
   });
@@ -62,6 +64,7 @@ describe("slugify (default export)", () => {
       postSlug: "Custom Post Slug",
       description: "Test",
       pubDatetime: new Date(),
+      tags: ["test"],
     };
     expect(slugify(post)).toBe("custom-post-slug");
   });

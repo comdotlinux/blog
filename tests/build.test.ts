@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { execSync } from "child_process";
 import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 

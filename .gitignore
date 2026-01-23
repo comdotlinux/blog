@@ -26,3 +26,9 @@ pnpm-debug.log*
 .jampack/
 /.idea/**
 .wrangler/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
