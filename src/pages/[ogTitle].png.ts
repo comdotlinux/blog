@@ -3,10 +3,10 @@ import generateOgImage from "@utils/generateOgImage";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ params }) => {
-  const svg = await generateOgImage(params.ogTitle);
-  return new Response(svg, {
+  const png = await generateOgImage(params.ogTitle);
+  return new Response(new Uint8Array(png), {
     headers: {
-      "Content-Type": "image/svg+xml",
+      "Content-Type": "image/png",
     },
   });
 };

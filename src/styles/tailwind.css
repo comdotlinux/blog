@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@source "../../src";
+
+@theme {
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --breakpoint-sm: 640px;
+
+  --color-skin-fill: rgb(var(--color-fill));
+  --color-skin-accent: rgb(var(--color-accent));
+  --color-skin-base: rgb(var(--color-text-base));
+  --color-skin-inverted: rgb(var(--color-fill));
+  --color-skin-card: rgb(var(--color-card));
+  --color-skin-card-muted: rgb(var(--color-card-muted));
+  --color-skin-line: rgb(var(--color-border));
+}

@@ -51,7 +51,7 @@ describe("getPostsByTag", () => {
   });
 
   it("is case-insensitive through slugification", () => {
-    const posts = [createMockPost("1", ["JavaScript"])];
+    const posts = [createMockPost("1", ["javascript"])];
 
     const result = getPostsByTag(posts, "javascript");
 

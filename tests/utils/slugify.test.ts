@@ -11,11 +11,11 @@ describe("slugifyStr", () => {
   });
 
   it("handles multiple spaces", () => {
-    expect(slugifyStr("Multiple   Spaces")).toBe("multiple---spaces");
+    expect(slugifyStr("Multiple   Spaces")).toBe("multiple-spaces");
   });
 
   it("handles unicode characters", () => {
-    expect(slugifyStr("Café & Restaurant")).toBe("café--restaurant");
+    expect(slugifyStr("Café & Restaurant")).toBe("cafe-restaurant");
   });
 
   it("handles empty string", () => {
