@@ -56,12 +56,11 @@ describe("Build Output", () => {
     }
   });
 
-  it("includes JS assets", () => {
-    const assetsDir = join(distDir, "_astro");
-    if (existsSync(assetsDir)) {
-      const files = readdirSync(assetsDir);
-      const jsFiles = files.filter(f => f.endsWith(".js"));
-      expect(jsFiles.length).toBeGreaterThan(0);
+  it("includes Pagefind assets", () => {
+    const pagefindDir = join(distDir, "pagefind");
+    if (existsSync(pagefindDir)) {
+      const files = readdirSync(pagefindDir);
+      expect(files.length).toBeGreaterThan(0);
     }
   });
 });
