@@ -1,0 +1,64 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse .tool-versions
+        id: tool-versions
+        run: |
+          echo "nodejs=$(awk '/^nodejs/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
+          echo "bun=$(awk '/^bun/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
+
+      - name: Display versions from .tool-versions
+        run: |
+          echo "Node.js: ${{ steps.tool-versions.outputs.nodejs }}"
+          echo "Bun: ${{ steps.tool-versions.outputs.bun }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.tool-versions.outputs.nodejs }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ steps.tool-versions.outputs.bun }}
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run linter
+        run: bun run lint
+
+      - name: Build site
+        run: bun run build
+
+      - name: Run unit tests
+        run: bun run test:run
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Run e2e tests
+        run: bun run test:e2e
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
