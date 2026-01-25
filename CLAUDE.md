@@ -74,18 +74,26 @@ ogImage: string (optional)
 
 ## Code Style
 
-- **No useless comments:** Do not add obvious or redundant comments that merely restate what the code does. Comments should only explain non-obvious logic or provide important context.
+- **No useless comments:** NEVER add obvious, redundant, or explanatory comments that merely restate what the code does. Comments should only explain non-obvious logic or provide important context that cannot be understood from the code itself.
+- **Remove AI-generated comments:** If you encounter comments that appear to be AI-generated boilerplate (e.g., "// Initialize the search", "// Handle input changes", "// Render results"), remove them.
+- **Clean code over documented code:** Write self-documenting code with clear variable/function names instead of adding comments.
 
-## Before Completing Any Change
+## Tests Policy
 
-**REQUIRED:** Before considering any code change complete, you MUST run and verify:
+**NEVER delete or modify existing tests without explicitly asking the user first.** If a test is failing:
+1. Fix the code to make the test pass, OR
+2. Ask the user if the test expectation is wrong before changing it
 
-1. `bun run lint` - All linting passes
+## Before Committing Any Change
+
+**REQUIRED:** Before making ANY commit, you MUST run these checks locally and ensure they ALL pass:
+
+1. `bun run lint` - All linting passes (0 errors)
 2. `bun run test:run` - All unit tests pass (94+ tests)
 3. `bun run build` - Build succeeds with Pagefind indexing
 4. `bun run test:e2e` - All e2e tests pass (55+ tests)
 
-Do NOT commit or declare work complete until all four checks pass. If any test fails, fix the issue before proceeding.
+These are the same checks that run in GitHub Actions CI. Do NOT commit if any check fails. Fix all issues first, then commit.
 
 ## Astro 6 Content Layer API
 
