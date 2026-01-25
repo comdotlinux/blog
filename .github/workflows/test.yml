@@ -16,10 +16,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Parse .tool-versions
+        id: tool-versions
+        run: |
+          echo "nodejs=$(awk '/^nodejs/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
+          echo "bun=$(awk '/^bun/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
+
+      - name: Display versions from .tool-versions
+        run: |
+          echo "Node.js: ${{ steps.tool-versions.outputs.nodejs }}"
+          echo "Bun: ${{ steps.tool-versions.outputs.bun }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.tool-versions.outputs.nodejs }}
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.3.6"
+          bun-version: ${{ steps.tool-versions.outputs.bun }}
 
       - name: Install dependencies
         run: bun install
