@@ -86,14 +86,43 @@ ogImage: string (optional)
 
 ## Before Committing Any Change
 
-**REQUIRED:** Before making ANY commit, you MUST run these checks locally and ensure they ALL pass:
+**REQUIRED:** Before making ANY commit, you MUST run these checks locally IN THIS EXACT ORDER and ensure they ALL pass:
 
-1. `bun run lint` - All linting passes (0 errors)
-2. `bun run test:run` - All unit tests pass (94+ tests)
-3. `bun run build` - Build succeeds with Pagefind indexing
-4. `bun run test:e2e` - All e2e tests pass (55+ tests)
+```bash
+rm -rf dist                 # Start fresh like CI
+bun run lint                # 1. Linting (0 errors)
+bun run build               # 2. Build (must run before unit tests!)
+bun run test:run            # 3. Unit tests (94+ tests, requires dist/)
+bun run test:e2e            # 4. E2E tests (55+ tests)
+```
 
-These are the same checks that run in GitHub Actions CI. Do NOT commit if any check fails. Fix all issues first, then commit.
+This matches the exact order in `.github/workflows/test.yml`. The build MUST run before unit tests because `tests/build.test.ts` checks for files in `dist/`. Do NOT commit if any check fails.
+
+**After running all checks, you MUST:**
+
+1. Display a summary table to the user:
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | X pages indexed |
+| Unit Tests | ✓ PASS | X tests passed |
+| E2E Tests | ✓ PASS | X tests passed |
+
+2. Prepend an entry to `CHANGELOG.md` with the current date/time as header:
+
+```markdown
+## YYYY-MM-DD HH:MM
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | X pages indexed |
+| Unit Tests | ✓ PASS | X tests passed |
+| E2E Tests | ✓ PASS | X tests passed |
+
+Changes: <brief description of what changed>
+```
 
 ## Astro 6 Content Layer API
 
