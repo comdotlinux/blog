@@ -22,6 +22,7 @@ This is a personal blog built with AstroPaper, an Astro 6 Beta-based static site
 | `bun run test` | Run unit tests with Vitest |
 | `bun run test:run` | Run unit tests once |
 | `bun run test:e2e` | Run e2e tests with Playwright |
+| `bun run lighthouse` | Run Lighthouse CI (85%+ performance required) |
 | `bun run cz` | Commit with commitizen (conventional commits) |
 | `bun run sync` | Generate TypeScript types for Astro modules |
 
@@ -70,7 +71,8 @@ ogImage: string (optional)
 
 - Uses conventional commits via commitizen (`bun run cz`)
 - Pre-commit hooks run Prettier via lint-staged
-- GitHub Actions runs lint, unit tests, build, and e2e tests on every push/PR
+- GitHub Actions runs lint, unit tests, build, e2e tests, and Lighthouse CI on every push/PR
+- Lighthouse CI enforces a minimum 85% performance score (fails build if below threshold)
 
 ## Code Style
 
@@ -94,6 +96,7 @@ bun run lint                # 1. Linting (0 errors)
 bun run build               # 2. Build (must run before unit tests!)
 bun run test:run            # 3. Unit tests (94+ tests, requires dist/)
 bun run test:e2e            # 4. E2E tests (55+ tests)
+bun run lighthouse          # 5. Lighthouse CI (85%+ performance)
 ```
 
 This matches the exact order in `.github/workflows/test.yml`. The build MUST run before unit tests because `tests/build.test.ts` checks for files in `dist/`. Do NOT commit if any check fails.
@@ -108,6 +111,7 @@ This matches the exact order in `.github/workflows/test.yml`. The build MUST run
 | Build | ✓ PASS | X pages indexed |
 | Unit Tests | ✓ PASS | X tests passed |
 | E2E Tests | ✓ PASS | X tests passed |
+| Lighthouse | ✓ PASS | X% performance |
 
 2. Prepend an entry to `CHANGELOG.md` with the current date/time as header:
 
@@ -120,6 +124,16 @@ This matches the exact order in `.github/workflows/test.yml`. The build MUST run
 | Build | ✓ PASS | X pages indexed |
 | Unit Tests | ✓ PASS | X tests passed |
 | E2E Tests | ✓ PASS | X tests passed |
+| Lighthouse | ✓ PASS | X% performance |
+
+### Lighthouse Performance (https://blog.kulkarni.cloud/)
+
+| Device | Score | FCP | LCP | TBT | CLS | SI |
+|--------|-------|-----|-----|-----|-----|-----|
+| Mobile | X% | Xs | Xs | Xms | X | Xs |
+| Desktop | X% | Xs | Xs | Xms | X | Xs |
+
+**Diagnostics:** <list any issues found>
 
 Changes: <brief description of what changed>
 ```
@@ -139,6 +153,7 @@ Content collections use the new Content Layer API:
 - **ESLint:** v9 with flat config (`eslint.config.js`)
 - **Prettier:** v3 with Astro and Tailwind plugins
 - **Testing:** Vitest (unit), Playwright (e2e)
+- **Performance:** Lighthouse CI (min 85% score, config in `lighthouserc.json`)
 - **Search:** Pagefind (build-time indexing)
 - **Tailwind:** v4 with CSS-first config (`src/styles/tailwind.css`)
 
