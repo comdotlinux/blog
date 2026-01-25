@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a personal blog built with AstroPaper, an Astro 6 Beta-based static site generator. The blog is deployed to Cloudflare Pages at https://b.kulkarni.cloud/.
 
-**Stack:** Astro 6 Beta + React + TypeScript + TailwindCSS + Bun
+**Stack:** Astro 6 Beta + TypeScript + TailwindCSS v4 + Bun
 
 ## Commands
 
@@ -19,24 +19,25 @@ This is a personal blog built with AstroPaper, an Astro 6 Beta-based static site
 | `bun run lint:fix` | Run ESLint with auto-fix |
 | `bun run format` | Format code with Prettier |
 | `bun run format:check` | Check formatting without fixing |
-| `bun run test` | Run tests with Vitest |
-| `bun run test:run` | Run tests once |
+| `bun run test` | Run unit tests with Vitest |
+| `bun run test:run` | Run unit tests once |
+| `bun run test:e2e` | Run e2e tests with Playwright |
 | `bun run cz` | Commit with commitizen (conventional commits) |
 | `bun run sync` | Generate TypeScript types for Astro modules |
 
 ## Architecture
 
 **Key Directories:**
-- `src/content/blog/` - Markdown blog posts with YAML frontmatter
+- `src/data/blog/` - Markdown blog posts with YAML frontmatter
 - `src/content.config.ts` - Content collection configuration (Astro 6 Content Layer API)
 - `src/content/_schemas.ts` - Zod schema for blog post frontmatter validation
-- `src/components/` - Astro (server) and React (interactive) components
+- `src/components/` - Astro components (all server-rendered)
 - `src/layouts/` - Page layout templates
 - `src/pages/` - Route definitions
 - `src/utils/` - Utility functions (sorting, slugifying, pagination, OG image generation)
 - `src/config.ts` - Site configuration (title, author, socials, posts per page)
 
-**Component Pattern:** Astro components (`.astro`) for static content, React components (`.tsx`) for interactive features (Search, Card, Datetime).
+**Component Pattern:** All components are Astro (`.astro`) including Search (Pagefind-based), Card, and Datetime.
 
 ## Blog Post Frontmatter Schema
 
@@ -69,16 +70,28 @@ ogImage: string (optional)
 
 - Uses conventional commits via commitizen (`bun run cz`)
 - Pre-commit hooks run Prettier via lint-staged
+- GitHub Actions runs lint, unit tests, build, and e2e tests on every push/PR
 
 ## Code Style
 
 - **No useless comments:** Do not add obvious or redundant comments that merely restate what the code does. Comments should only explain non-obvious logic or provide important context.
 
+## Before Completing Any Change
+
+**REQUIRED:** Before considering any code change complete, you MUST run and verify:
+
+1. `bun run lint` - All linting passes
+2. `bun run test:run` - All unit tests pass (94+ tests)
+3. `bun run build` - Build succeeds with Pagefind indexing
+4. `bun run test:e2e` - All e2e tests pass (55+ tests)
+
+Do NOT commit or declare work complete until all four checks pass. If any test fails, fix the issue before proceeding.
+
 ## Astro 6 Content Layer API
 
 Content collections use the new Content Layer API:
 - Config file at `src/content.config.ts` (not `src/content/config.ts`)
-- Uses `glob` loader: `loader: glob({ pattern: "**/*.md", base: "./src/content/blog" })`
+- Uses `glob` loader: `loader: glob({ pattern: "**/*.md", base: "./src/data/blog" })`
 - Zod imported from `astro/zod` (not `astro:content`)
 - Render method: `import { render } from "astro:content"; const { Content } = await render(post);`
 
@@ -88,7 +101,26 @@ Content collections use the new Content Layer API:
 - **Runtime:** Node.js 24.13.0 (for Astro internals)
 - **ESLint:** v9 with flat config (`eslint.config.js`)
 - **Prettier:** v3 with Astro and Tailwind plugins
-- **Testing:** Vitest
+- **Testing:** Vitest (unit), Playwright (e2e)
+- **Search:** Pagefind (build-time indexing)
+- **Tailwind:** v4 with CSS-first config (`src/styles/tailwind.css`)
+
+## Key Libraries & Technical Details
+
+| Purpose | Library | Notes |
+|---------|---------|-------|
+| Date formatting | `dayjs` | Used in Datetime.astro |
+| Slug generation | `slugify` + `lodash.kebabcase` | kebabCase first, then slugify |
+| OG image generation | `satori` + `@resvg/resvg-js` | Outputs PNG (not SVG) |
+| Search | Pagefind | Build-time indexing, `<script is:inline>` for runtime |
+| Syntax highlighting | Shiki with `@shikijs/transformers` | Theme: one-dark-pro |
+| Tailwind scoped styles | `@reference` directive | Required in all `<style>` blocks |
+
+**Important patterns:**
+- All interactive components use `<script is:inline>` (no React/client-side hydration)
+- Tailwind v4 uses CSS-first config in `src/styles/tailwind.css` (no `tailwind.config.js`)
+- OG images route: `src/pages/[ogTitle].png.ts` generates PNG dynamically
+- Content path: `src/data/blog/` (not `src/content/blog/`)
 
 ## Cloudflare Pages Deployment
 
