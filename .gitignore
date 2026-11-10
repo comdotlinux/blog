@@ -24,7 +24,14 @@ pnpm-debug.log*
 
 # ignore Jampack cache files
 .jampack/
-/.idea/**
+
+# editor config: only the files below are tracked
+/.idea/*
+!/.idea/.gitignore
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/launch.json
+
 .wrangler/
 
 # Playwright
@@ -35,3 +42,6 @@ pnpm-debug.log*
 
 # Lighthouse CI
 .lighthouseci/
+
+# oh-my-claudecode
+.omc/

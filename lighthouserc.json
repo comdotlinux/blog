@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "bun run preview",
+      "startServerCommand": "bun run preview --ignore-lock",
       "startServerReadyPattern": "localhost",
       "startServerReadyTimeout": 30000,
       "numberOfRuns": 3,
@@ -16,7 +16,8 @@
       }
     },
     "upload": {
-      "target": "temporary-public-storage"
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
     }
   }
 }
