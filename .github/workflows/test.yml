@@ -60,7 +60,7 @@ jobs:
         with:
           urls: http://localhost:4321/
           uploadArtifacts: true
-          temporaryPublicStorage: true
+          temporaryPublicStorage: false
           configPath: ./lighthouserc.json
           runs: 3
 

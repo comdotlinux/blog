@@ -1,3 +1,27 @@
+## 2026-11-10 16:26
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages indexed |
+| Unit Tests | ✓ PASS | 94 tests passed |
+| E2E Tests | ✓ PASS | 55 tests passed |
+| Lighthouse | ✓ PASS | 98% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 96%, 99%, 100% |
+| /about | 95%, 97%, 100% |
+| /posts | 95%, 95%, 100% |
+| /posts/1 | 99%, 100%, 100% |
+| /404 | 96%, 100%, 100% |
+
+**Diagnostics:** None. Live site not measured; scores are from the local preview build.
+
+Changes: Stop uploading Lighthouse reports to public temporary storage; `lighthouserc.json` writes them to `.lighthouseci/reports/` (git-ignored) and CI sets `temporaryPublicStorage: false`, keeping reports as private workflow artifacts
+
 ## 2026-11-10 14:10
 
 | Check | Status | Details |
