@@ -6,12 +6,12 @@ Personal blog built with AstroPaper, deployed at [blog.kulkarni.cloud](https://b
 
 | Category        | Technology             |
 | --------------- | ---------------------- |
-| Framework       | Astro 6 Beta           |
+| Framework       | Astro 7                |
 | Components      | React 18               |
 | Styling         | TailwindCSS            |
 | Language        | TypeScript             |
-| Package Manager | Bun 1.3.6              |
-| Runtime         | Node.js 24.13.0        |
+| Package Manager | Bun 1.4.4              |
+| Runtime         | Node.js 26.13.0        |
 | Linting         | ESLint 9 (flat config) |
 | Formatting      | Prettier 3             |
 | Unit Tests      | Vitest                 |
@@ -39,7 +39,7 @@ src/
 ├── content/
 │   ├── blog/           # Markdown blog posts
 │   └── _schemas.ts     # Zod frontmatter schema
-├── content.config.ts   # Astro 6 Content Layer config
+├── content.config.ts   # Content Layer config
 ├── components/         # Astro + React components
 ├── layouts/            # Page layouts
 ├── pages/              # Routes

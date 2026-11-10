@@ -3,12 +3,12 @@
 # blog (astro-paper)
 
 ## Purpose
-Personal blog ("Developer Musings") built on AstroPaper: Astro 6 beta, TypeScript, Tailwind v4, Bun. Static output in `dist/`, deployed to Cloudflare Pages. `.idea/`, `.vscode/`, `.wrangler/`, `.omc/`, `dist/`, `node_modules/` are editor/tooling/generated and intentionally undocumented.
+Personal blog ("Developer Musings") built on AstroPaper: Astro 7, TypeScript 6, Tailwind v4, Bun. Static output in `dist/`, deployed to Cloudflare Pages. `.idea/`, `.vscode/`, `.wrangler/`, `.omc/`, `dist/`, `node_modules/` are editor/tooling/generated and intentionally undocumented.
 
 ## Key Files
 | File | Description |
 |------|-------------|
-| `package.json` | Package `astro-paper` 3.0.0, `bun@1.3.6`, node >=24.13.0. Scripts: `dev`, `build` (`astro check && astro build && pagefind --site dist`), `preview`, `sync`, `format`, `format:check`, `lint`, `lint:fix`, `test` (vitest), `test:run`, `test:e2e`, `test:e2e:ui`, `lighthouse` (`lhci autorun`), `cz`, `prepare` (`husky install`). Also holds the `lint-staged` config (`prettier --write` on all files) |
+| `package.json` | Package `astro-paper` 3.0.0, `bun@1.4.4`, node >=26.13.0. Scripts: `dev`, `build` (`astro check && astro build && pagefind --site dist`), `preview`, `sync`, `format`, `format:check`, `lint`, `lint:fix`, `test` (vitest), `test:run`, `test:e2e`, `test:e2e:ui`, `lighthouse` (`lhci autorun`), `cz`, `prepare` (`husky`). Also holds the `lint-staged` config (`prettier --write` on all files) |
 | `bun.lock` | Bun lockfile |
 | `astro.config.mjs` | `site` from `SITE.website` in `src/config.ts`; sitemap integration; Tailwind via `@tailwindcss/vite`; remark-toc + remark-collapse ("Table of contents"); Shiki theme `one-dark-pro` with notation transformers |
 | `tsconfig.json` | Extends `astro/tsconfigs/strict`; `baseUrl: src` with `@assets`, `@config`, `@components`, `@content`, `@layouts`, `@pages`, `@styles`, `@utils` aliases |
@@ -16,10 +16,10 @@ Personal blog ("Developer Musings") built on AstroPaper: Astro 6 beta, TypeScrip
 | `.prettierrc` | Prettier: semi, double quotes, 80 cols, `trailingComma: es5`, `arrowParens: avoid`, LF; astro and tailwindcss plugins |
 | `.prettierignore` | Ignores everything except `src`, `public/**/*.ts`, `public/**/*.js`, `.github`, and a few root files |
 | `vitest.config.ts` | Unit tests: `tests/**/*.test.ts`, globals on, `@config` alias |
-| `playwright.config.ts` | E2E: `./e2e`, chromium only, baseURL `http://localhost:4173`, web server `bun run preview --port 4173`, CI uses 2 retries and 1 worker |
-| `lighthouserc.json` | Lighthouse CI: 3 runs, performance only, fails below 0.85; server `bun run preview` |
-| `.tool-versions` | `nodejs 24.13.0`, `bun 1.3.6` (read by Cloudflare Pages and CI) |
-| `.nvmrc` | Node `24.13.0` |
+| `playwright.config.ts` | E2E: `./e2e`, chromium only, baseURL `http://localhost:4173`, web server `bun run preview --port 4173 --ignore-lock` (`--ignore-lock` keeps Astro 7 from moving the server to the background when it detects an AI agent), CI uses 2 retries and 1 worker |
+| `lighthouserc.json` | Lighthouse CI: 3 runs, performance only, fails below 0.85; server `bun run preview --ignore-lock`; reports written to `.lighthouseci/reports/`, never uploaded |
+| `mise.toml` | Toolchain pins: `node` 26.13.0, `bun` 1.4.4. Source of truth for local dev (`mise install`) and CI (`jdx/mise-action`) |
+| `.nvmrc` | Node `26.13.0`, read by Cloudflare Pages. Must equal the `mise.toml` node pin; CI checks this |
 | `.markdownlint.json` | Disables MD033 and MD013 |
 | `.gitattributes` | Git LFS filter for four PNGs in `public/assets/20221008/` and `public/assets/20221010/` |
 | `.gitignore` | Ignores `dist/`, `node_modules/`, `.astro`, `.env*`, `.wrangler/`, `.omc/`, Playwright and Lighthouse output, and everything in `.idea/` and `.vscode/` except `.idea/.gitignore`, `.vscode/extensions.json`, `.vscode/launch.json` |
@@ -81,6 +81,6 @@ The four PNGs in `20221008/` and `20221010/` are Git LFS objects (`.gitattribute
 ## Dependencies
 
 ### External
-Astro 6.0.0-beta.3, Tailwind 4, Pagefind, satori + resvg (OG images), vitest, Playwright, Lighthouse CI, husky + lint-staged, commitizen.
+Astro 7, `@astrojs/markdown-remark` (unified processor for remark plugins), Tailwind 4, TypeScript 6, Pagefind, satori + resvg (OG images), vitest, Playwright, Lighthouse CI, husky + lint-staged, commitizen.
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

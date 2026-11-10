@@ -14,28 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Parse .tool-versions
-        id: tool-versions
+      - name: Install Node.js and Bun from mise.toml
+        uses: jdx/mise-action@v5
+
+      - name: Check .nvmrc matches mise.toml
         run: |
-          echo "nodejs=$(awk '/^nodejs/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
-          echo "bun=$(awk '/^bun/ {print $2}' .tool-versions)" >> $GITHUB_OUTPUT
-
-      - name: Display versions from .tool-versions
-        run: |
-          echo "Node.js: ${{ steps.tool-versions.outputs.nodejs }}"
-          echo "Bun: ${{ steps.tool-versions.outputs.bun }}"
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ steps.tool-versions.outputs.nodejs }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: ${{ steps.tool-versions.outputs.bun }}
+          node --version
+          bun --version
+          test "v$(cat .nvmrc)" = "$(node --version)" || { echo ".nvmrc ($(cat .nvmrc)) differs from mise.toml node ($(node --version)); Cloudflare Pages reads .nvmrc"; exit 1; }
 
       - name: Install dependencies
         run: bun install
@@ -65,7 +53,7 @@ jobs:
           runs: 3
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report

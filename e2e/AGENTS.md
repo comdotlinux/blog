@@ -4,7 +4,7 @@
 # e2e
 
 ## Purpose
-Playwright specs run against the built site served by `bun run preview --port 4173`. Config: `../playwright.config.ts` (`testDir ./e2e`, chromium only, baseURL `http://localhost:4173`, HTML reporter, 2 retries and 1 worker on CI, webServer auto-started).
+Playwright specs run against the built site served by `bun run preview --port 4173 --ignore-lock` (`--ignore-lock` keeps Astro 7 from moving the server to the background when it detects an AI agent). Config: `../playwright.config.ts` (`testDir ./e2e`, chromium only, baseURL `http://localhost:4173`, HTML reporter, 2 retries and 1 worker on CI, webServer auto-started).
 
 ## Key Files
 | File | Exercises |

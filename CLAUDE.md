@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog built with AstroPaper, an Astro 6 Beta-based static site generator. The blog is deployed to Cloudflare Pages at https://b.kulkarni.cloud/.
+This is a personal blog built with AstroPaper, an Astro 7-based static site generator. The blog is deployed to Cloudflare Pages at https://b.kulkarni.cloud/.
 
-**Stack:** Astro 6 Beta + TypeScript + TailwindCSS v4 + Bun
+**Stack:** Astro 7 + TypeScript 6 + TailwindCSS v4 + Bun
 
 ## Commands
 
@@ -30,7 +30,7 @@ This is a personal blog built with AstroPaper, an Astro 6 Beta-based static site
 
 **Key Directories:**
 - `src/data/blog/` - Markdown blog posts with YAML frontmatter
-- `src/content.config.ts` - Content collection configuration (Astro 6 Content Layer API)
+- `src/content.config.ts` - Content collection configuration (Content Layer API)
 - `src/content/_schemas.ts` - Zod schema for blog post frontmatter validation
 - `src/components/` - Astro components (all server-rendered)
 - `src/layouts/` - Page layout templates
@@ -138,7 +138,7 @@ This matches the exact order in `.github/workflows/test.yml`. The build MUST run
 Changes: <brief description of what changed>
 ```
 
-## Astro 6 Content Layer API
+## Content Layer API
 
 Content collections use the new Content Layer API:
 - Config file at `src/content.config.ts` (not `src/content/config.ts`)
@@ -148,9 +148,12 @@ Content collections use the new Content Layer API:
 
 ## Tooling
 
-- **Package Manager:** Bun 1.3.6
-- **Runtime:** Node.js 24.13.0 (for Astro internals)
-- **ESLint:** v9 with flat config (`eslint.config.js`)
+- **Versions:** `mise.toml` pins Node.js and Bun (`mise install`); CI installs them with `jdx/mise-action`
+- **Package Manager:** Bun 1.4.4
+- **Runtime:** Node.js 26.13.0 (for Astro internals)
+- **TypeScript:** 6.x. Do not move to 7 until `astro check` and typescript-eslint support it (both refuse to run on 7.0)
+- **Markdown:** `unified()` processor from `@astrojs/markdown-remark` in `astro.config.mjs`, needed for the remark TOC/collapse plugins (Astro 7 defaults to Sätteri)
+- **ESLint:** v10 with flat config (`eslint.config.js`)
 - **Prettier:** v3 with Astro and Tailwind plugins
 - **Testing:** Vitest (unit), Playwright (e2e)
 - **Performance:** Lighthouse CI (min 85% score, config in `lighthouserc.json`)
@@ -178,13 +181,8 @@ Content collections use the new Content Layer API:
 
 - **Build command:** `bun install && bun run build`
 - **Output directory:** `dist`
-- **Versions:** Managed via `.tool-versions` (Cloudflare reads this automatically)
-
-The `.tool-versions` file specifies:
-```
-nodejs 24.13.0
-bun 1.3.6
-```
+- **Node.js version:** read from `.nvmrc`. Cloudflare Pages does not read `mise.toml`, so `.nvmrc` must equal the `node` pin in `mise.toml`; CI fails if they differ
+- **Bun version:** Cloudflare Pages takes it only from the `BUN_VERSION` environment variable in the Pages project settings; keep it equal to the `bun` pin in `mise.toml`
 
 ## Static Assets
 
