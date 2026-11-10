@@ -1,3 +1,27 @@
+## 2026-11-10 14:10
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages indexed |
+| Unit Tests | ✓ PASS | 94 tests passed |
+| E2E Tests | ✓ PASS | 55 tests passed |
+| Lighthouse | ✓ PASS | 99% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 99%, 99%, 99% |
+| /about | 99%, 100%, 100% |
+| /posts | 99%, 100%, 100% |
+| /posts/1 | 99%, 100%, 100% |
+| /404 | 99%, 99%, 100% |
+
+**Diagnostics:** None. Live site not measured; scores are from the local preview build.
+
+Changes: Add hierarchical `AGENTS.md` docs (17 files, none inside `public/`, `src/pages/` or `src/data/blog/` because Astro would publish them), ignore `.omc/` and untracked `.idea/` / `.vscode/` files in `.gitignore`
+
 ## 2026-01-25 10:02
 
 | Check | Status | Details |
