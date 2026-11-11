@@ -1,16 +1,9 @@
-import { defineConfig } from "vitest/config";
-import { resolve } from "path";
+/// <reference types="vitest/config" />
+import { getViteConfig } from "astro/config";
 
-export default defineConfig({
+export default getViteConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     globals: true,
-  },
-  resolve: {
-    alias: {
-      "@config": resolve(__dirname, "./src/config.ts"),
-      "@content/*": resolve(__dirname, "./src/content/*"),
-      "@utils/*": resolve(__dirname, "./src/utils/*"),
-    },
   },
 });

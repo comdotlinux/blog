@@ -1,17 +1,18 @@
-import slugifyLib from "slugify";
-import kebabCase from "lodash.kebabcase";
-import type { BlogFrontmatter } from "@content/_schemas";
+import kebabcase from "lodash.kebabcase";
+import slugify from "slugify";
 
+const hasNonLatin = (str: string): boolean => /[^\x00-\x7F]/.test(str);
+
+/**
+ * Slugify a string using a hybrid approach:
+ * - Latin strings: slugify (e.g. "E2E Testing" → "e2e-testing")
+ * - Strings with non-Latin chars: lodash.kebabcase (preserves non-Latin chars)
+ */
 export const slugifyStr = (str: string): string => {
-  return slugifyLib(kebabCase(str), { lower: true, strict: true });
+  if (hasNonLatin(str)) {
+    return kebabcase(str);
+  }
+  return slugify(str, { lower: true });
 };
 
-const slugify = (post: BlogFrontmatter): string => {
-  return post.postSlug ? slugifyStr(post.postSlug) : slugifyStr(post.title);
-};
-
-export const slugifyAll = (arr: string[]): string[] => {
-  return arr.map(str => slugifyStr(str));
-};
-
-export default slugify;
+export const slugifyAll = (arr: string[]) => arr.map(str => slugifyStr(str));

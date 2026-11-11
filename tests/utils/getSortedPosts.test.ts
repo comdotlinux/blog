@@ -1,68 +1,68 @@
-import { describe, it, expect } from "vitest";
-import getSortedPosts from "../../src/utils/getSortedPosts";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import type { CollectionEntry } from "astro:content";
+import { getSortedPosts } from "@/utils/getSortedPosts";
 
-const createMockPost = (
+const post = (
   id: string,
   pubDatetime: Date,
-  draft = false
-): CollectionEntry<"blog"> =>
+  { draft = false, modDatetime }: { draft?: boolean; modDatetime?: Date } = {}
+) =>
   ({
     id,
-    data: {
-      title: `Post ${id}`,
-      description: "Test description",
-      pubDatetime,
-      draft,
-      tags: ["test"],
-    },
-  }) as CollectionEntry<"blog">;
+    data: { draft, pubDatetime, modDatetime, tags: [] },
+  }) as unknown as CollectionEntry<"posts">;
+
+const ids = (posts: CollectionEntry<"posts">[]) => posts.map(p => p.id);
+
+afterEach(() => vi.unstubAllEnvs());
 
 describe("getSortedPosts", () => {
-  it("sorts posts by date in descending order (newest first)", () => {
-    const posts = [
-      createMockPost("old", new Date("2022-01-01")),
-      createMockPost("new", new Date("2024-01-01")),
-      createMockPost("mid", new Date("2023-01-01")),
-    ];
-
-    const sorted = getSortedPosts(posts);
-
-    expect(sorted[0].id).toBe("new");
-    expect(sorted[1].id).toBe("mid");
-    expect(sorted[2].id).toBe("old");
+  it("sorts newest first by pubDatetime", () => {
+    const sorted = getSortedPosts([
+      post("old", new Date("2022-01-01")),
+      post("new", new Date("2024-01-01")),
+      post("mid", new Date("2023-01-01")),
+    ]);
+    expect(ids(sorted)).toEqual(["new", "mid", "old"]);
   });
 
-  it("filters out draft posts", () => {
-    const posts = [
-      createMockPost("published", new Date("2024-01-01"), false),
-      createMockPost("draft", new Date("2024-02-01"), true),
-    ];
-
-    const sorted = getSortedPosts(posts);
-
-    expect(sorted.length).toBe(1);
-    expect(sorted[0].id).toBe("published");
+  it("uses modDatetime over pubDatetime when present", () => {
+    const sorted = getSortedPosts([
+      post("recent", new Date("2023-01-01")),
+      post("updated", new Date("2022-01-01"), {
+        modDatetime: new Date("2024-01-01"),
+      }),
+    ]);
+    expect(ids(sorted)).toEqual(["updated", "recent"]);
   });
 
-  it("handles empty array", () => {
+  it("excludes drafts", () => {
+    const sorted = getSortedPosts([
+      post("published", new Date("2024-01-01")),
+      post("draft", new Date("2024-02-01"), { draft: true }),
+    ]);
+    expect(ids(sorted)).toEqual(["published"]);
+  });
+
+  it("excludes posts dated after today (Europe/Berlin) in production", () => {
+    vi.stubEnv("DEV", false);
+    const sorted = getSortedPosts([
+      post("today", new Date()),
+      post("future", new Date(Date.now() + 2 * 864e5)),
+    ]);
+    expect(ids(sorted)).toEqual(["today"]);
+  });
+
+  it("includes future posts in dev", () => {
+    vi.stubEnv("DEV", true);
+    const sorted = getSortedPosts([
+      post("today", new Date()),
+      post("future", new Date(Date.now() + 2 * 864e5)),
+    ]);
+    expect(ids(sorted)).toEqual(["future", "today"]);
+  });
+
+  it("returns an empty array for no posts", () => {
     expect(getSortedPosts([])).toEqual([]);
-  });
-
-  it("handles all drafts", () => {
-    const posts = [
-      createMockPost("draft1", new Date("2024-01-01"), true),
-      createMockPost("draft2", new Date("2024-02-01"), true),
-    ];
-
-    expect(getSortedPosts(posts)).toEqual([]);
-  });
-
-  it("handles posts with same date", () => {
-    const sameDate = new Date("2024-01-01");
-    const posts = [createMockPost("a", sameDate), createMockPost("b", sameDate)];
-
-    const sorted = getSortedPosts(posts);
-    expect(sorted.length).toBe(2);
   });
 });

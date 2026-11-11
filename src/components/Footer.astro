@@ -1,71 +1,30 @@
 ---
-import Hr from "./Hr.astro";
+import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
+import { useTranslations } from "@/i18n";
 
-export interface Props {
+type Props = {
   noMarginTop?: boolean;
-}
+} & HTMLAttributes<"footer">;
 
-const { noMarginTop = false } = Astro.props;
+const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+
+const t = useTranslations(Astro.currentLocale);
+const currentYear = new Date().getFullYear();
 ---
 
-<footer class={`${noMarginTop ? "" : "mt-auto"}`}>
-  <Hr noPadding />
-  <div class="footer-wrapper">
-    <Socials centered />
-    <a
-      href="http://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
-      target="_blank"
-      rel="license noopener noreferrer"
-      style="display:inline-block;"
-      >CC BY-NC-SA 4.0
-      <div class="copyright-wrapper">
-        <span>Licensed under</span>
-        <img
-          style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"
-          src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-        />
-        <img
-          style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"
-          src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
-        />
-        <img
-          style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"
-          src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"
-        />
-        <img
-          style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"
-          src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
-        />
-      </div>
-    </a>
+<footer
+  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
+  {...attrs}
+>
+  <div
+    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"
+  >
+    <Socials />
+    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
+      <span>{t.footer.copyright} &#169; {currentYear}</span>
+      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
+      <span>{t.footer.allRightsReserved}</span>
+    </div>
   </div>
 </footer>
-
-<style>
-  @reference "../styles/tailwind.css";
-
-  footer {
-    @apply w-full;
-  }
-
-  .footer-wrapper {
-    @apply flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4;
-  }
-
-  .link-button {
-    @apply my-1 p-2 hover:rotate-6;
-  }
-
-  .link-button svg {
-    @apply scale-125;
-  }
-
-  .copyright-wrapper {
-    @apply my-2 flex flex-col items-center whitespace-nowrap sm:flex-row;
-  }
-
-  .separator {
-    @apply hidden sm:inline;
-  }
-</style>

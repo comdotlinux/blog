@@ -35,18 +35,25 @@ bun run cz           # Commit with conventional commits
 ## Project Structure
 
 ```
+astro-paper.config.ts   # Site configuration (edit this)
+astro.config.ts         # Astro config (Markdown, Shiki, fonts, integrations)
 src/
 ├── content/
-│   ├── blog/           # Markdown blog posts
-│   └── _schemas.ts     # Zod frontmatter schema
-├── content.config.ts   # Content Layer config
-├── components/         # Astro + React components
+│   ├── posts/          # Blog posts (.md / .mdx)
+│   └── pages/about.md  # About page
+├── content.config.ts   # Content collections and frontmatter schemas
+├── assets/icons/       # SVG icons (UI and socials)
+├── components/         # Astro components
+├── i18n/               # UI strings
 ├── layouts/            # Page layouts
-├── pages/              # Routes
-├── utils/              # Utilities
-└── config.ts           # Site configuration
+├── pages/              # Routes, including OG image routes
+├── scripts/theme.ts    # Light/dark theme toggle
+├── styles/             # Tailwind v4 CSS
+├── types/config.ts     # Config types
+├── utils/              # Utilities and rehype plugins
+└── config.ts           # Resolves astro-paper.config.ts with defaults
 
-public/assets/          # Static images
+public/                 # Static files (images in public/assets/YYYYMMDD/)
 tests/                  # Vitest unit tests
 e2e/                    # Playwright E2E tests
 ```

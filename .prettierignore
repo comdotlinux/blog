@@ -7,7 +7,9 @@
 !/public/**/*.js
 !/.github
 !tsconfig.json
-!astro.config.mjs
+!astro.config.ts
+!astro-paper.config.ts
+!copy-pagefind.mjs
 !package.json
 !.prettierrc
 !.eslintrc.js

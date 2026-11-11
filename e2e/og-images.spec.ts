@@ -1,94 +1,58 @@
 import { test, expect } from "@playwright/test";
 
+const slugs = [
+  "followup-latest-version-of-the-tools-using-asdf",
+  "gradle-tricks",
+  "on-the-topic-of-tools-their-versions-and-automated-installations",
+  "some-interesting-features-in-github-actions",
+  "tmux-how-i-use-it",
+];
+
 test.describe("OG Images", () => {
-  test("homepage has og:image meta tag", async ({ page }) => {
+  for (const slug of slugs) {
+    test(`${slug} has a reachable PNG og:image`, async ({ page, request }) => {
+      await page.goto(`/posts/${slug}/`);
+      const content = await page
+        .locator('meta[property="og:image"]')
+        .getAttribute("content");
+      expect(content).toBe(`https://b.kulkarni.cloud/posts/${slug}/index.png`);
+
+      const response = await request.get(new URL(content!).pathname);
+      expect(response.status()).toBe(200);
+      expect(response.headers()["content-type"]).toContain("image/png");
+    });
+  }
+
+  test("homepage og:image is the site default", async ({ page }) => {
     await page.goto("/");
-
-    const ogImage = await page.locator('meta[property="og:image"]');
-    await expect(ogImage).toHaveAttribute("content", /.+/);
+    const content = await page
+      .locator('meta[property="og:image"]')
+      .getAttribute("content");
+    expect(new URL(content!).pathname).toBe("/astropaper-og.jpg");
   });
 
-  test("post page has og:image meta tag", async ({ page }) => {
+  test("post has og:title, og:description and twitter:card", async ({
+    page,
+  }) => {
     await page.goto("/posts/gradle-tricks/");
-
-    const ogImage = await page.locator('meta[property="og:image"]');
-    await expect(ogImage).toHaveAttribute("content", /.+/);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      "content",
+      /Gradle Tricks/
+    );
+    await expect(
+      page.locator('meta[property="og:description"]')
+    ).toHaveAttribute("content", /.+/);
+    await expect(page.locator('meta[property="twitter:card"]')).toHaveAttribute(
+      "content",
+      "summary_large_image"
+    );
   });
 
-  test("og:image URL is accessible", async ({ page, request }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const ogImage = await page.locator('meta[property="og:image"]');
-    const imageUrl = await ogImage.getAttribute("content");
-
-    expect(imageUrl).toBeTruthy();
-
-    if (imageUrl && !imageUrl.startsWith("http")) {
-      const fullUrl = new URL(imageUrl, page.url()).href;
-      const response = await request.get(fullUrl);
-      expect(response.ok()).toBeTruthy();
-    }
-  });
-
-  test("homepage has og:title meta tag", async ({ page }) => {
-    await page.goto("/");
-
-    const ogTitle = await page.locator('meta[property="og:title"]');
-    await expect(ogTitle).toHaveAttribute("content", /.+/);
-  });
-
-  test("post has og:title matching post title", async ({ page }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const ogTitle = await page.locator('meta[property="og:title"]');
-    const content = await ogTitle.getAttribute("content");
-    expect(content).toContain("Gradle");
-  });
-
-  test("has og:description meta tag", async ({ page }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const ogDesc = await page.locator('meta[property="og:description"]');
-    await expect(ogDesc).toHaveAttribute("content", /.+/);
-  });
-
-  test("has og:type meta tag", async ({ page }) => {
-    await page.goto("/");
-
-    const ogType = await page.locator('meta[property="og:type"]');
-    await expect(ogType).toHaveAttribute("content", /.+/);
-  });
-
-  test("post page has article og:type", async ({ page }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const ogType = await page.locator('meta[property="og:type"]');
-    await expect(ogType).toHaveAttribute("content", "article");
-  });
-
-  test("has og:url meta tag", async ({ page }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const ogUrl = await page.locator('meta[property="og:url"]');
-    await expect(ogUrl).toHaveAttribute("content", /.+/);
-  });
-
-  test("has twitter:card meta tag", async ({ page }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const twitterCard = await page.locator('meta[name="twitter:card"]');
-    await expect(twitterCard).toHaveAttribute("content", /.+/);
-  });
-
-  test("has twitter:image meta tag", async ({ page }) => {
-    await page.goto("/posts/gradle-tricks/");
-
-    const twitterImage = await page.locator('meta[name="twitter:image"]');
-    const ogImage = await page.locator('meta[property="og:image"]');
-
-    const twitterContent = await twitterImage.getAttribute("content");
-    const ogContent = await ogImage.getAttribute("content");
-
-    expect(twitterContent || ogContent).toBeTruthy();
+  test("old OG image path still serves a PNG", async ({ request }) => {
+    const response = await request.get(
+      "/On%20the%20topic%20of%20tools,%20their%20versions%20&%20automated%20installations.png"
+    );
+    expect(response.status()).toBe(200);
+    expect(response.headers()["content-type"]).toContain("image/png");
   });
 });

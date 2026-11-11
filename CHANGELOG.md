@@ -1,3 +1,27 @@
+## 2026-11-11 22:00
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind), astro check 0 errors / 0 warnings / 0 hints |
+| Unit Tests | ✓ PASS | 50 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.3% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 92% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** `/about` LCP 2.0s (median) is the slowest page; everything else paints in 0.8s. Compared with `main`, the only removed URL is `/toggle-theme.js`; `/posts/1/` leaves the sitemap (Cloudflare now answers it with a 301 from `public/_redirects`); RSS links and GUIDs are byte-identical. Live site not measured.
+
+Changes: Re-port onto upstream AstroPaper v7.1.0 (commit `2e8bcbe`). Content moves to `src/content/posts` and `src/content/pages/about.md`; site config to `astro-paper.config.ts` (Europe/Berlin, archives off, edit-post and share links on, 9 socials with new YouTube/Reddit/Mastodon icons). Per-post OG images at `/posts/<slug>/index.png`; the one old OG PNG URL is kept as a static file. Shiki switches to github-light/github-dark; the in-post "Table of contents" headings give way to the layout's sidebar TOC. Tests: 5 unit files retired, the rest rewritten against the real modules (`getViteConfig`), new URL-preservation spec over `e2e/fixtures/urls.txt`. Upstream deltas are listed in `AGENTS.md`.
+
 ## 2026-11-10 16:39
 
 | Check | Status | Details |

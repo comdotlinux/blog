@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { existsSync, readdirSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
 const distDir = join(process.cwd(), "dist");
@@ -62,5 +62,23 @@ describe("Build Output", () => {
       const files = readdirSync(pagefindDir);
       expect(files.length).toBeGreaterThan(0);
     }
+  });
+
+  it("generates a PNG OG image for each post", () => {
+    const postsDir = join(distDir, "posts");
+    const pngs = readdirSync(postsDir)
+      .map(d => join(postsDir, d, "index.png"))
+      .filter(existsSync);
+    expect(pngs).toHaveLength(5);
+    for (const png of pngs) {
+      expect(readFileSync(png).subarray(0, 8)).toEqual(
+        Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+      );
+    }
+  });
+
+  it("redirects /posts/1/ to /posts/ with a 301", () => {
+    const redirects = readFileSync(join(distDir, "_redirects"), "utf8");
+    expect(redirects).toMatch(/^\/posts\/1\/\s+\/posts\/\s+301$/m);
   });
 });

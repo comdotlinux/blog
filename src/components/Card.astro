@@ -1,34 +1,31 @@
 ---
+import type { CollectionEntry } from "astro:content";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
-import type { BlogFrontmatter } from "@content/_schemas";
 
-export interface Props {
-  href?: string;
-  frontmatter: BlogFrontmatter;
-  secHeading?: boolean;
-}
+type Props = {
+  variant?: "h2" | "h3";
+} & CollectionEntry<"posts">;
 
-const { href, frontmatter, secHeading = true } = Astro.props;
-const { title, pubDatetime, description } = frontmatter;
+const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+
+const { title, description, ...props } = data;
 ---
 
 <li class="my-6">
   <a
-    href={href}
-    class="text-skin-accent inline-block text-lg font-medium decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
+    href={getPostUrl(id, filePath, Astro.currentLocale)}
+    class:list={[
+      "text-accent inline-block text-lg font-medium",
+      "decoration-dashed underline-offset-4 hover:underline",
+      "focus-visible:no-underline focus-visible:underline-offset-0",
+    ]}
   >
-    {
-      secHeading ? (
-        <h2 class="text-lg font-medium decoration-dashed hover:underline">
-          {title}
-        </h2>
-      ) : (
-        <h3 class="text-lg font-medium decoration-dashed hover:underline">
-          {title}
-        </h3>
-      )
-    }
+    <Heading transition:name={toTransitionName(id)}>
+      {title}
+    </Heading>
   </a>
-  <Datetime datetime={pubDatetime} />
+  <Datetime {...props} />
   <p>{description}</p>
 </li>

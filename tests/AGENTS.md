@@ -1,26 +1,28 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # tests
 
 ## Purpose
-Vitest unit tests. Config: `../vitest.config.ts` (includes `tests/**/*.test.ts`, `globals: true`, aliases `@config`, `@content/*`, `@utils/*`).
+Vitest unit tests. Config: `../vitest.config.ts` uses Astro's `getViteConfig()`, so tests import real modules through the `@/*` alias and Astro virtual modules (`astro:content`, `astro:i18n`, `astro:env/client`) resolve. Includes `tests/**/*.test.ts`, `globals: true`.
+
+Unit tests need no network: offline, the Google font provider in `astro.config.ts` only logs a warning.
 
 ## Key Files
 | File | Description |
 |------|-------------|
-| `build.test.ts` | Checks `dist/` output: index.html, sitemap-index.xml, rss.xml, 404.html, about/, posts/, tags/, search/, `_astro` CSS, `pagefind/`. Needs a prior build. |
+| `build.test.ts` | Checks `dist/` output: index.html, sitemaps, rss.xml, 404.html, about/, posts/, tags/, search/, `_astro` CSS, `pagefind/`; the 5 `posts/*/index.png` start with PNG magic bytes; `_redirects` has the `/posts/1/` 301. Needs a prior build. |
 
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
-| `components/` | Logic tests for Card and Datetime (see `components/AGENTS.md`) |
-| `utils/` | One test per util in `src/utils/` (see `utils/AGENTS.md`) |
+| `utils/` | Tests for `src/utils/` (see `utils/AGENTS.md`) |
 
 ## For AI Agents
 
 ### Working In This Directory
 - **Never delete or modify existing tests without asking the user first.** If a test fails, fix the code, or ask whether the expectation is wrong.
+- `postFilter` returns `true` for every non-draft post when `import.meta.env.DEV` is set, which Vitest does. Use `vi.stubEnv("DEV", false)` to test future-post exclusion, and `vi.unstubAllEnvs()` afterwards.
 
 ### Testing Requirements
 | Command | Purpose |
@@ -33,7 +35,7 @@ Vitest unit tests. Config: `../vitest.config.ts` (includes `tests/**/*.test.ts`,
 ## Dependencies
 
 ### Internal
-`../src/utils/`, `../src/config.ts`, `../src/content/_schemas.ts`.
+`../src/utils/`, `../src/config.ts`, `../astro-paper.config.ts`.
 
 ### External
 `vitest`.

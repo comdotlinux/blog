@@ -1,33 +1,36 @@
 import { test, expect } from "@playwright/test";
 
+test.use({ colorScheme: "light" });
+
 test.describe("Dark Mode Toggle", () => {
-  test("theme button exists and is clickable", async ({ page }) => {
+  test("toggle switches data-theme and .dark on <html>", async ({ page }) => {
     await page.goto("/");
+    const html = page.locator("html");
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await expect(html).not.toHaveClass(/\bdark\b/);
 
-    const themeButton = page.locator("#theme-btn");
-    await expect(themeButton).toBeVisible();
-    await themeButton.click();
+    await page.locator("#theme-btn").click();
+    await expect(html).toHaveAttribute("data-theme", "dark");
+    await expect(html).toHaveClass(/\bdark\b/);
+
+    await page.locator("#theme-btn").click();
+    await expect(html).toHaveAttribute("data-theme", "light");
   });
 
-  test("theme button has sun and moon icons", async ({ page }) => {
+  test("theme persists across reload", async ({ page }) => {
     await page.goto("/");
+    await page.locator("#theme-btn").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 
-    await expect(page.locator("#moon-svg")).toBeAttached();
-    await expect(page.locator("#sun-svg")).toBeAttached();
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 
-  test("clicking theme button changes icon visibility", async ({ page }) => {
+  test("theme button aria-label reflects the theme", async ({ page }) => {
     await page.goto("/");
-
-    const themeButton = page.locator("#theme-btn");
-
-    await themeButton.click();
-    await page.waitForTimeout(100);
-
-    await themeButton.click();
-    await page.waitForTimeout(100);
-
-    await expect(page.locator("#moon-svg")).toBeAttached();
-    await expect(page.locator("#sun-svg")).toBeAttached();
+    const button = page.locator("#theme-btn");
+    await expect(button).toHaveAttribute("aria-label", "light");
+    await button.click();
+    await expect(button).toHaveAttribute("aria-label", "dark");
   });
 });

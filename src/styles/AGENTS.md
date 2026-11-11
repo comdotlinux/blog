@@ -1,26 +1,27 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # styles
 
 ## Purpose
 
-Global CSS: Tailwind v4 CSS-first config plus theme variables and base styles. No `tailwind.config.js` exists.
+Global CSS, vendored unchanged from upstream: Tailwind v4 CSS-first config, design tokens and prose styles. No `tailwind.config.js`.
 
 ## Key Files
 
-| File           | Description                                                                                                                                                                                                        |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `tailwind.css` | `@import "tailwindcss"`, `@plugin "@tailwindcss/typography"`, `@source "../../src"`, and `@theme` (IBM Plex Mono, `sm` breakpoint, `skin-*` colors mapped to `rgb(var(--color-*))`)                                |
-| `base.css`     | Imports `tailwind.css`. `@layer base`: light/dark RGB variables (`html[data-theme]`), sun/moon icon toggle, body, `.prose` typography overrides, scrollbar. `@layer components`: `.display-none`, `.focus-outline` |
+| File             | Description                                                                                                                                                                                                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `global.css`     | Entry point imported by `src/layouts/Layout.astro`. Imports `tailwindcss`, `theme.css`, `typography.css`, `rehype-callouts/theme/obsidian`; `dark` custom variant on `[data-theme=dark]`; base focus/scrollbar rules; utilities `max-w-app`, `app-layout`, `active-nav` |
+| `theme.css`      | `@theme inline` tokens (`background`, `foreground`, `accent`, `accent-foreground`, `muted`, `muted-foreground`, `border`, `--font-app` = Google Sans Code) with light (`:root`, `[data-theme="light"]`) and dark (`[data-theme="dark"]`) values                         |
+| `typography.css` | `@tailwindcss/typography` plugin; `.app-prose` overrides (headings, links, code, `.table-wrapper`) and Shiki dual-theme rules for `.astro-code` (dark via `html[data-theme="dark"]`, diff/highlight line classes)                                                       |
 
 ## For AI Agents
 
 ### Working In This Directory
 
-- Imported globally by `src/layouts/Layout.astro` (`@styles/base.css`). Component `<style>` blocks pull in `tailwind.css` through `@reference "../styles/tailwind.css";` (path relative to the file).
-- Add a color by defining the RGB triplet in both theme blocks of `base.css` and a `--color-skin-*` entry in `tailwind.css`.
-- Dark mode is driven by `data-theme` set by `public/toggle-theme.js`.
+- Change colours in `theme.css` (both theme blocks), not in components.
+- Shiki uses `defaultColor: false` (`astro.config.ts`), so code colours come only from the `.astro-code` rules in `typography.css`; changing the Shiki theme pair needs no CSS change.
+- Dark mode is driven by `data-theme` on `<html>`, set by the inline script in `Layout.astro` and `src/scripts/theme.ts`.
 
 ### Testing Requirements
 
@@ -30,6 +31,6 @@ Global CSS: Tailwind v4 CSS-first config plus theme variables and base styles. N
 
 ### External
 
-`tailwindcss` v4, `@tailwindcss/typography`.
+`tailwindcss` v4, `@tailwindcss/typography`, `rehype-callouts` (theme CSS).
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

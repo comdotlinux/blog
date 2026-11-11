@@ -1,33 +1,34 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # assets
 
 ## Purpose
 
-Build-time code assets. Contains only the social icon SVG map; blog images live in `public/assets/`.
+SVG icons imported as Astro components (`import IconX from "@/assets/icons/IconX.svg"`) and optimised by the experimental SVGO optimizer in `astro.config.ts`. Blog images live in `public/assets/`; upstream's demo `images/` were not taken.
 
 ## Key Files
 
-| File             | Description                                                                                                                                                                                                                                                                                   |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `socialIcons.ts` | Default export `socialIcons: SocialIcons` (type from `../types`): map of social name (Github, Facebook, Instagram, LinkedIn, Mail, Twitter, Twitch, YouTube, WhatsApp, Snapchat, Pinterest, TikTok, CodePen, Discord, GitLab, Reddit, Skype, Steam, Telegram, Mastodon) to inline SVG strings |
+| Path                  | Description                                                                                                                                                                       |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `icons/Icon*.svg`     | UI icons (Tabler): Archive, ArrowLeft, ArrowNarrowUp, ArrowRight, Calendar, ChevronLeft, Edit, Hash, ListTree, MenuDeep, Moon, Rss, Search, SunHigh, Underline, X. Upstream bytes |
+| `icons/socials/*.svg` | One icon per social `name`: facebook, github, linkedin, mail, pinterest, telegram, whatsapp, x (upstream) and youtube, reddit, mastodon (ours)                                    |
 
 ## For AI Agents
 
 ### Working In This Directory
 
-- Keys must match the `SocialMedia` union in `src/types.ts` and the `name` values in `SOCIALS` (`src/config.ts`).
-- Consumed only by `src/components/Socials.astro` via `<Fragment set:html={...} />`. Icons use the `icon-tabler` class styled in `src/styles/base.css`.
+- `src/components/Socials.astro` and the post `ShareLinks` component load `icons/socials/<name>.svg` via `import.meta.glob`; a `socials`/`shareLinks` entry in `astro-paper.config.ts` whose `name` has no file renders without an icon.
+- A new social icon is a deviation from upstream: add it to "Upstream delta" in `../../AGENTS.md`.
 
 ### Testing Requirements
 
-- No dedicated tests. Visual check: `e2e/homepage.spec.ts`; run `bun run build` for type errors.
+- `e2e/homepage.spec.ts` checks the social links; run `bun run build` for type errors.
 
 ## Dependencies
 
 ### Internal
 
-`src/types.ts`, `src/components/Socials.astro`.
+`src/components/Socials.astro`, `src/components/Header.astro`, `src/components/Tag.astro`, `src/pages/**`, `../../astro-paper.config.ts`.
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

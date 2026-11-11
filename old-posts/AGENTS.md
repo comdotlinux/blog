@@ -4,7 +4,7 @@
 # old-posts
 
 ## Purpose
-Eleven markdown posts authored by "Sat Naing" (the AstroPaper theme author), dated 2022-03 to 2023-01: AstroPaper docs and portfolio write-ups. They came in with the initial commit (`5746835`) and are leftover upstream demo content. Nothing reads this directory: `grep old-posts` finds no reference in configs, `src/`, or tests, and the content collection loads only `src/data/blog/`. They are not built or published.
+Eleven markdown posts authored by "Sat Naing" (the AstroPaper theme author), dated 2022-03 to 2023-01: AstroPaper docs and portfolio write-ups. They came in with the initial commit (`5746835`) and are leftover upstream demo content. Nothing reads this directory: `grep old-posts` finds no reference in configs, `src/`, or tests, and the posts collection loads only `src/content/posts/`. They are not built or published.
 
 ## Key Files
 | File | Description |
@@ -24,7 +24,7 @@ Eleven markdown posts authored by "Sat Naing" (the AstroPaper theme author), dat
 ## For AI Agents
 
 ### Working In This Directory
-- Not part of the site. Moving a file into `src/data/blog/` publishes it; otherwise leave alone.
+- Not part of the site. Moving a file into `src/content/posts/` publishes it; otherwise leave alone.
 - Frontmatter follows the blog schema (see `CLAUDE.md`); `tailwind-typography.md` has no `postSlug`.
 - Do not delete or reorganise without asking the user.
 

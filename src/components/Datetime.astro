@@ -1,45 +1,62 @@
 ---
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import IconCalendar from "@/assets/icons/IconCalendar.svg";
+import config from "@/config";
+import { useTranslations } from "@/i18n";
+import { resolveTimezone } from "@/utils/resolveTimezone";
 
-export interface Props {
-  datetime: string | Date;
-  size?: "sm" | "lg";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+type Props = {
   class?: string;
-}
+  size?: "sm" | "lg";
+  pubDatetime: string | Date;
+  timezone?: string;
+  modDatetime?: string | Date | null;
+};
 
-const { datetime, size = "sm", class: className } = Astro.props;
+const {
+  pubDatetime,
+  modDatetime,
+  size = "sm",
+  class: className = "",
+  timezone: postTimezone,
+} = Astro.props;
 
-const myDatetime = dayjs(datetime);
-const date = myDatetime.format("MMMM D, YYYY");
-const time = myDatetime.format("hh:mm A");
+const t = useTranslations(Astro.currentLocale);
+
+const isModified = modDatetime && modDatetime > pubDatetime;
+
+const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
+  resolveTimezone(postTimezone ?? config.site.timezone)
+);
+
+const date = datetime.format("D MMM, YYYY");
 ---
 
-<div class:list={["flex items-center space-x-2 opacity-80", className]}>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
+<div
+  class:list={["text-muted-foreground flex items-center gap-x-2", className]}
+>
+  <IconCalendar
     class:list={[
-      "fill-skin-base inline-block h-6 w-6",
-      { "scale-90": size === "sm", "scale-100": size === "lg" },
+      "inline-block size-6 min-w-5.5",
+      { "scale-90": size === "sm" },
     ]}
-    aria-hidden="true"
-  >
-    <path
-      d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"
-    ></path>
-    <path
-      d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"
-    ></path>
-  </svg>
-  <span class="sr-only">Posted on:</span>
-  <span
-    class:list={[
-      "italic",
-      { "text-sm": size === "sm", "text-base": size === "lg" },
-    ]}
+  />
+  {
+    isModified && (
+      <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
+        {t.post.updatedAt}:
+      </span>
+    )
+  }
+  <time
+    class:list={["text-sm", { "sm:text-base": size === "lg" }]}
+    datetime={datetime.toISOString()}
   >
     {date}
-    <span aria-hidden="true"> | </span>
-    <span class="sr-only">&nbsp;at&nbsp;</span>
-    {time}
-  </span>
+  </time>
 </div>
