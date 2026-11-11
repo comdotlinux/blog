@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # e2e
 
@@ -9,21 +9,24 @@ Playwright specs run against the built site served by `bun run preview --port 41
 ## Key Files
 | File | Exercises |
 |------|-----------|
-| `homepage.spec.ts` | `/` loads, shows posts, nav links, social links |
-| `navigation.spec.ts` | Home to posts/tags/about/search, logo to home, `/about/`, 404 for unknown route |
-| `posts.spec.ts` | `/posts/` listing, open a post, `gradle-tricks` content, date, tags, table of contents |
-| `tags.spec.ts` | `/tags/`, `/tags/gradle/`, `/tags/automation/`, `/tags/linux/` |
-| `search.spec.ts` | `/search/` Pagefind input, queries "gradle" and "tmux", result count, URL query update |
-| `code-blocks.spec.ts` | Shiki output on `gradle-tricks` and `tmux-how-i-use-it`: pre, highlighting, `astro-code`, background, whitespace, monospace, horizontal scroll, dark-mode theme |
-| `dark-mode.spec.ts` | Theme toggle button, sun/moon icons, icon visibility on click |
-| `og-images.spec.ts` | `og:*` and `twitter:*` meta tags on `/` and `gradle-tricks`; og:image URL reachable |
+| `url-preservation.spec.ts` | Every path in `fixtures/urls.txt` returns 200; `/posts/1/` meta refresh to `/posts/`; unknown path 404; RSS links equal the pre-v7 ones; the old mismatched slug 404s |
+| `fixtures/urls.txt` | The 35 URLs that existed before the AstroPaper v7 re-port and must keep resolving. Also used by the post-deploy `curl` check |
+| `homepage.spec.ts` | `/` loads, 4 recent posts, nav links, 9 social links, titles for YouTube/Reddit/Mastodon |
+| `navigation.spec.ts` | Header journeys, logo to home, 404 for unknown route, no archives link |
+| `posts.spec.ts` | Listing and pagination, post detail, Europe/Berlin date, tags, sidebar TOC, inline whitespace (`compressHTML`), edit links, share links |
+| `tags.spec.ts` | `/tags/` (14 tags) and tag pages (`Tag: x` titles) |
+| `search.spec.ts` | `/search/` Pagefind UI, queries, result count, URL query update |
+| `code-blocks.spec.ts` | Shiki `github-light`/`github-dark` CSS-variable output, dark switch, scroll, monospace |
+| `dark-mode.spec.ts` | `#theme-btn` toggle, `data-theme` and `.dark` on `<html>`, persistence on reload |
+| `og-images.spec.ts` | `og:image` per post is `/posts/<slug>/index.png` (fetched against baseURL), home image, meta tags, old OG PNG still served |
 | `rss.spec.ts` | `/rss.xml` reachable, contains posts, site title |
 
 ## For AI Agents
 
 ### Working In This Directory
 - **Never delete or modify existing tests without asking the user first.**
-- Specs hard-code post slugs (`gradle-tricks`, `tmux-how-i-use-it`) and tags; renaming content in `../src/data/blog/` breaks them.
+- Specs hard-code post slugs (`gradle-tricks`, `tmux-how-i-use-it`, ...) and tags; renaming files in `../src/content/posts/` changes URLs and breaks them.
+- `og:image` values are absolute production URLs; always fetch `new URL(content).pathname` against the local baseURL.
 
 ### Testing Requirements
 | Command | Purpose |
@@ -37,7 +40,7 @@ Playwright specs run against the built site served by `bun run preview --port 41
 ## Dependencies
 
 ### Internal
-Built site (`../dist/`), `../src/data/blog/`.
+Built site (`../dist/`), `../src/content/posts/`, `fixtures/urls.txt`.
 
 ### External
 `@playwright/test`, Pagefind (built into `dist/pagefind`).

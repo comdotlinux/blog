@@ -1,20 +1,18 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # utils
 
 ## Purpose
-Unit tests for `src/utils/`, one file per util.
+Unit tests for `src/utils/`.
 
 ## Key Files
 | File | Covers |
 |------|--------|
-| `slugify.test.ts` | `slugifyStr`, `slugifyAll`, default `slugify` (`src/utils/slugify.ts`) |
-| `getSortedPosts.test.ts` | `src/utils/getSortedPosts.ts`: ordering, drafts, empty, same date |
-| `getPostsByTag.test.ts` | `src/utils/getPostsByTag.ts`: filtering, slug matching |
-| `getUniqueTags.test.ts` | `src/utils/getUniqueTags.ts`: slugify, dedupe, drafts |
-| `getPageNumbers.test.ts` | `src/utils/getPageNumbers.ts` (mocks `@config`) |
-| `generateOgImage.test.ts` | Does not import `generateOgImage.ts`; asserts the sanitization regex, `SITE` values and template constants inline. |
+| `slugify.test.ts` | `slugifyStr`, `slugifyAll`: Latin, accents, non-Latin, empty; the site's 14 tags map to themselves |
+| `getSortedPosts.test.ts` | `getSortedPosts`: newest first, `modDatetime` over `pubDatetime`, drafts, future posts with `DEV` false/true |
+| `getUniqueTags.test.ts` | `getUniqueTags`: `{tag, tagName}` shape, dedupe, sort, drafts, future posts |
+| `getPostPaths.test.ts` | `getPostSlug` (flat, `_`-prefixed and nested paths) and `getPostUrl` (`/posts/<slug>/`); post URLs depend on these |
 
 ## For AI Agents
 

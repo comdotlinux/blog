@@ -1,70 +1,58 @@
 import { describe, it, expect } from "vitest";
-import slugify, { slugifyStr, slugifyAll } from "../../src/utils/slugify";
+import { slugifyStr, slugifyAll } from "@/utils/slugify";
+
+const siteTags = [
+  "afx",
+  "asdf",
+  "automation",
+  "build",
+  "ci",
+  "commandline",
+  "githubactions",
+  "github",
+  "gradle",
+  "linux",
+  "productivity",
+  "terminal",
+  "tmux",
+  "tools",
+];
 
 describe("slugifyStr", () => {
-  it("converts string to lowercase slug", () => {
-    expect(slugifyStr("Hello World")).toBe("hello-world");
+  it("lowercases and hyphenates Latin input", () => {
+    expect(slugifyStr("E2E Testing")).toBe("e2e-testing");
   });
 
-  it("handles special characters", () => {
+  it("strips punctuation from Latin input", () => {
     expect(slugifyStr("Test Post #1")).toBe("test-post-1");
   });
 
-  it("handles multiple spaces", () => {
-    expect(slugifyStr("Multiple   Spaces")).toBe("multiple-spaces");
+  it("transliterates accented Latin characters", () => {
+    expect(slugifyStr("Café Crème")).toBe("cafe-creme");
   });
 
-  it("handles unicode characters", () => {
-    expect(slugifyStr("Café & Restaurant")).toBe("cafe-restaurant");
+  it("keeps non-Latin characters", () => {
+    expect(slugifyStr("日本語 タグ")).toBe("日本語-タグ");
   });
 
-  it("handles empty string", () => {
+  it("returns an empty string for empty input", () => {
     expect(slugifyStr("")).toBe("");
+  });
+
+  it.each(siteTags)("maps site tag %s to itself", tag => {
+    expect(slugifyStr(tag)).toBe(tag);
   });
 });
 
 describe("slugifyAll", () => {
-  it("slugifies array of strings", () => {
-    const input = ["Hello World", "Test Post"];
-    const expected = ["hello-world", "test-post"];
-    expect(slugifyAll(input)).toEqual(expected);
+  it("slugifies each element", () => {
+    expect(slugifyAll(["Hello World", "Test Post"])).toEqual([
+      "hello-world",
+      "test-post",
+    ]);
   });
 
-  it("handles empty array", () => {
+  it("handles an empty array", () => {
     expect(slugifyAll([])).toEqual([]);
-  });
-});
-
-describe("slugify (default export)", () => {
-  it("uses postSlug if provided", () => {
-    const post = {
-      title: "My Post Title",
-      postSlug: "custom-slug",
-      description: "Test",
-      pubDatetime: new Date(),
-      tags: ["test"],
-    };
-    expect(slugify(post)).toBe("custom-slug");
-  });
-
-  it("falls back to title if no postSlug", () => {
-    const post = {
-      title: "My Post Title",
-      description: "Test",
-      pubDatetime: new Date(),
-      tags: ["test"],
-    };
-    expect(slugify(post)).toBe("my-post-title");
-  });
-
-  it("slugifies postSlug with spaces", () => {
-    const post = {
-      title: "Title",
-      postSlug: "Custom Post Slug",
-      description: "Test",
-      pubDatetime: new Date(),
-      tags: ["test"],
-    };
-    expect(slugify(post)).toBe("custom-post-slug");
   });
 });

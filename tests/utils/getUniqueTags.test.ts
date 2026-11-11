@@ -1,75 +1,49 @@
-import { describe, it, expect } from "vitest";
-import getUniqueTags from "../../src/utils/getUniqueTags";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import type { CollectionEntry } from "astro:content";
+import { getUniqueTags } from "@/utils/getUniqueTags";
 
-const createMockPost = (
-  id: string,
+const post = (
   tags: string[],
-  draft = false
-): CollectionEntry<"blog"> =>
-  ({
-    id,
-    data: {
-      title: `Post ${id}`,
-      description: "Test description",
-      pubDatetime: new Date(),
-      draft,
-      tags,
-    },
-  }) as CollectionEntry<"blog">;
+  { draft = false, pubDatetime = new Date("2022-10-08T12:00:00Z") } = {}
+) => ({ data: { tags, draft, pubDatetime } }) as CollectionEntry<"posts">;
+
+afterEach(() => vi.unstubAllEnvs());
 
 describe("getUniqueTags", () => {
-  it("extracts unique tags from posts", () => {
-    const posts = [
-      createMockPost("1", ["javascript", "react"]),
-      createMockPost("2", ["javascript", "typescript"]),
-    ];
-
-    const tags = getUniqueTags(posts);
-
-    expect(tags).toContain("javascript");
-    expect(tags).toContain("react");
-    expect(tags).toContain("typescript");
-    expect(tags.length).toBe(3);
+  it("returns {tag, tagName} objects", () => {
+    expect(getUniqueTags([post(["Hello World"])])).toEqual([
+      { tag: "hello-world", tagName: "Hello World" },
+    ]);
   });
 
-  it("slugifies tags", () => {
-    const posts = [createMockPost("1", ["Hello World", "Test Tag"])];
-
-    const tags = getUniqueTags(posts);
-
-    expect(tags).toContain("hello-world");
-    expect(tags).toContain("test-tag");
+  it("dedupes by slug", () => {
+    const tags = getUniqueTags([post(["tmux", "Tmux"]), post(["tmux"])]);
+    expect(tags.map(t => t.tag)).toEqual(["tmux"]);
   });
 
-  it("excludes tags from draft posts", () => {
-    const posts = [
-      createMockPost("published", ["public-tag"], false),
-      createMockPost("draft", ["draft-tag"], true),
-    ];
-
-    const tags = getUniqueTags(posts);
-
-    expect(tags).toContain("public-tag");
-    expect(tags).not.toContain("draft-tag");
+  it("sorts by slug", () => {
+    const tags = getUniqueTags([post(["tools", "asdf"]), post(["gradle"])]);
+    expect(tags.map(t => t.tag)).toEqual(["asdf", "gradle", "tools"]);
   });
 
-  it("handles empty array", () => {
+  it("excludes tags of draft posts", () => {
+    const tags = getUniqueTags([
+      post(["public"]),
+      post(["secret"], { draft: true }),
+    ]);
+    expect(tags.map(t => t.tag)).toEqual(["public"]);
+  });
+
+  it("excludes tags of future posts in production", () => {
+    vi.stubEnv("DEV", false);
+    const tags = getUniqueTags([
+      post(["public"]),
+      post(["later"], { pubDatetime: new Date(Date.now() + 7 * 864e5) }),
+    ]);
+    expect(tags.map(t => t.tag)).toEqual(["public"]);
+  });
+
+  it("returns an empty array for no posts", () => {
     expect(getUniqueTags([])).toEqual([]);
-  });
-
-  it("handles posts with no tags", () => {
-    const posts = [createMockPost("1", [])];
-    expect(getUniqueTags(posts)).toEqual([]);
-  });
-
-  it("removes duplicate tags", () => {
-    const posts = [
-      createMockPost("1", ["same", "same", "same"]),
-      createMockPost("2", ["same"]),
-    ];
-
-    const tags = getUniqueTags(posts);
-    expect(tags.filter(t => t === "same").length).toBe(1);
   });
 });

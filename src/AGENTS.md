@@ -1,66 +1,64 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # src
 
 ## Purpose
 
-All site source: Astro routes, components, layouts, content collection config, blog posts and utilities. Conventions, aliases and commands live in `../CLAUDE.md`.
+All site source: Astro routes, components, layouts, content collections, i18n strings, client scripts and utilities. Conventions, the `@/*` alias and commands live in `../CLAUDE.md`.
 
 ## Key Files
 
-| File                | Description                                                                                                                                                                                                              |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `config.ts`         | Exports `SITE` (website `https://b.kulkarni.cloud/`, author, title, desc, default `ogImage`, `lightAndDarkMode`, `postPerPage: 3`), `LOGO_IMAGE` and `SOCIALS` (entries with an `active` flag; only active ones render). |
-| `types.ts`          | Types `Site`, `SocialObjects`, `SocialIcons`, `SocialMedia` (union of supported network names).                                                                                                                          |
-| `content.config.ts` | Defines the `blog` collection: `glob` loader over `**/*.md` in `./src/data/blog`, schema `blogSchema` from `content/_schemas.ts`.                                                                                        |
-| `env.d.ts`          | Triple-slash references to `.astro/types.d.ts` and `astro/client`.                                                                                                                                                       |
+| File                | Description                                                                                                                                                                                                                                                                                                       |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `config.ts`         | Upstream resolver: default export `config: ResolvedAstroPaperConfig` = `../astro-paper.config.ts` plus defaults (`ogImage`, `lang`, `timezone`, `dir`, `googleVerification` from `PUBLIC_GOOGLE_SITE_VERIFICATION`, `perPage`, `perIndex`, `features.*`). Do not put values here; edit `../astro-paper.config.ts` |
+| `content.config.ts` | Collections `posts` (`glob` over `**/[^_]*.{md,mdx}` in `src/content/posts`, exported as `BLOG_PATH`) and `pages` (same pattern in `src/content/pages`). Frontmatter schemas live here (see `../CLAUDE.md`)                                                                                                       |
 
 ## Subdirectories
 
-| Directory     | Purpose                                                                                                   |
-| ------------- | --------------------------------------------------------------------------------------------------------- |
-| `assets/`     | `socialIcons.ts` only: SVG strings per `SocialMedia` (see `assets/AGENTS.md`)                             |
-| `components/` | Astro components (see `components/AGENTS.md`)                                                             |
-| `content/`    | Zod frontmatter schema (see `content/AGENTS.md`)                                                          |
-| `data/`       | `blog/` posts, frontmatter schema, image rules (see `data/AGENTS.md`; no `AGENTS.md` inside `data/blog/`) |
-| `layouts/`    | Page layouts (see `layouts/AGENTS.md`)                                                                    |
-| `pages/`      | File-based routes, documented in "Routes" below (no `AGENTS.md` inside)                                   |
-| `styles/`     | `base.css`, `tailwind.css` (see `styles/AGENTS.md`)                                                       |
-| `utils/`      | Post sorting, tags, slugs, pagination, OG image (see `utils/AGENTS.md`)                                   |
+| Directory     | Purpose                                                                                                          |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `assets/`     | SVG icons imported as components (see `assets/AGENTS.md`)                                                        |
+| `components/` | Shared Astro components (see `components/AGENTS.md`)                                                             |
+| `content/`    | `posts/` and `pages/` markdown (see `content/AGENTS.md`; no `AGENTS.md` inside `posts/` or `pages/`)             |
+| `i18n/`       | UI strings and `useTranslations` (see `i18n/AGENTS.md`)                                                          |
+| `layouts/`    | `Layout.astro` and `PostLayout.astro` (see `layouts/AGENTS.md`)                                                  |
+| `pages/`      | File-based routes, documented in "Routes" below (no `AGENTS.md` inside)                                          |
+| `scripts/`    | Bundled client scripts: `theme.ts` (see `scripts/AGENTS.md`)                                                     |
+| `styles/`     | `global.css`, `theme.css`, `typography.css` (see `styles/AGENTS.md`)                                             |
+| `types/`      | `config.ts`: config types (see `types/AGENTS.md`)                                                                |
+| `utils/`      | Post paths, sorting, filtering, tags, slugs, timezone, rehype plugins, Shiki transformer (see `utils/AGENTS.md`) |
 
 ## Routes (`pages/`)
 
-Never put an `AGENTS.md` (or any stray `.md`) under `pages/` or `data/blog/`: Astro turns every `.md` in `pages/` into a public route, and the `blog` glob loader treats every `.md` in `data/blog/` as a post and fails the build on missing frontmatter. Both directories are documented here and in `data/AGENTS.md` instead.
+Never put an `AGENTS.md` (or any stray `.md`) under `pages/`, `content/posts/` or `content/pages/`: Astro turns every `.md` in `pages/` into a public route, and the `posts`/`pages` glob loaders treat every `.md` there as an entry and fail the build on missing frontmatter. Files and directories starting with `_` are skipped by both.
 
-| File                       | Route                         | Description                                                                                                                                             |
-| -------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pages/index.astro`        | `/`                           | Hero, optional Featured (`data.featured`), 4 most recent posts. Uses `getSortedPosts`, `slugify`, `SOCIALS`                                             |
-| `pages/about.md`           | `/about`                      | Markdown with `layout: ../layouts/AboutLayout.astro`                                                                                                    |
-| `pages/search.astro`       | `/search`                     | Layout + Main + `Search` component                                                                                                                      |
-| `pages/404.astro`          | 404                           | Not-found page with "Go back home" link                                                                                                                 |
-| `pages/rss.xml.ts`         | `/rss.xml`                    | `@astrojs/rss` feed from sorted posts; links are `posts/<slugify(data)>`                                                                                |
-| `pages/[ogTitle].png.ts`   | `/<post title>.png`           | Static PNG per non-draft post lacking `ogImage`, via `@utils/generateOgImage`                                                                           |
-| `pages/posts/index.astro`  | `/posts`                      | First `SITE.postPerPage` posts into `Posts` layout with `pageNum={1}`                                                                                   |
-| `pages/posts/[slug].astro` | `/posts/<slug>`, `/posts/<N>` | `getStaticPaths` returns one path per non-draft post (`slugify(post.data)`, props `{ post }`) plus one per page number from `getPageNumbers` (no props) |
-| `pages/tags/index.astro`   | `/tags`                       | All tags from `getUniqueTags`, rendered as `Tag` (`size="lg"`) inside `Main`                                                                            |
-| `pages/tags/[tag].astro`   | `/tags/<tag>`                 | `getStaticPaths` maps `getUniqueTags(posts)` to params/props; lists non-draft posts via `getPostsByTag` as `Card`s                                      |
+| File                                 | Route                            | Description                                                                                                                 |
+| ------------------------------------ | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `pages/index.astro`                  | `/`                              | Hero, socials, featured posts, `config.posts.perIndex` recent posts                                                         |
+| `pages/about.astro`                  | `/about/`                        | Renders the `pages` entry `about` (`content/pages/about.md`)                                                                |
+| `pages/search.astro`                 | `/search/`                       | Pagefind UI (`@pagefind/default-ui`)                                                                                        |
+| `pages/404.astro`                    | 404                              | Not-found page                                                                                                              |
+| `pages/rss.xml.ts`                   | `/rss.xml`                       | `@astrojs/rss` feed of sorted posts, links from `getPostUrl`                                                                |
+| `pages/robots.txt.ts`                | `/robots.txt`                    | Allows all, points at `sitemap-index.xml`                                                                                   |
+| `pages/og.png.ts`                    | `/og.png`                        | Site-wide default OG PNG (satori + sharp). Only used when `public/<site.ogImage>` is missing                                |
+| `pages/archives/index.astro`         | `/archives/`                     | Posts grouped by year/month; redirects to 404 while `features.showArchives` is false (it is). `_utils/` is not a route      |
+| `pages/posts/[...page].astro`        | `/posts/`, `/posts/N/`           | `paginate` over sorted posts, `config.posts.perPage` per page. `/posts/1` is redirected (see `../public/_redirects`)        |
+| `pages/posts/[...slug]/index.astro`  | `/posts/<slug>/`                 | Post page: `PostLayout`, TOC, edit-post, share links, prev/next. Slug from `getPostSlug`. Local `_components/` (not routes) |
+| `pages/posts/[...slug]/index.png.ts` | `/posts/<slug>/index.png`        | Per-post OG PNG for posts without `ogImage`, when `features.dynamicOgImage` is on                                           |
+| `pages/tags/index.astro`             | `/tags/`                         | All tags from `getUniqueTags`                                                                                               |
+| `pages/tags/[tag]/[...page].astro`   | `/tags/<tag>/`, `/tags/<tag>/N/` | Paginated posts per slugified tag                                                                                           |
 
-- Blog content lives in `data/blog/`, not `pages/`. `getSortedPosts` and `getUniqueTags` already filter drafts.
-- `[ogTitle].png.ts` uses the raw post title as the param; `PostDetails` builds the matching URL `<title>.png`.
-- `posts/[slug].astro` branches on `Astro.props.post`: present renders `PostDetails`, absent renders `Posts` for page `Number(slug)`. A purely numeric post slug would collide with a page number.
-- Prev/Next links in `layouts/Posts.astro` expect page 1 at `/posts` and later pages at `/posts/N`.
-- Tag params are slugified by `getUniqueTags`; `Tag.astro` links use `name.toLowerCase()`, which must match the slug.
-- Scoped styles in `pages/index.astro` and `pages/404.astro` need `@reference "../styles/tailwind.css";`.
-- E2E coverage: `homepage`, `navigation` (about, 404), `search`, `rss`, `og-images`, `posts`, `code-blocks`, `tags` specs in `../e2e/`. Unit: `../tests/build.test.ts` plus `../tests/utils/` (`getPageNumbers`, `slugify`, `getSortedPosts`, `getUniqueTags`, `getPostsByTag`, `generateOgImage`).
+- All `pages/**` files are vendored upstream bytes; keep them unchanged (see "Upstream delta" in `../AGENTS.md`).
+- Both OG routes read Google Sans Code from the Astro Fonts API (`fontData["--font-google-sans-code"]`) via `utils/getFontPathByWeight.ts`.
 
 ## For AI Agents
 
 ### Working In This Directory
 
-- Use the path aliases from `../CLAUDE.md` (`@config`, `@utils/*`, ...) instead of relative imports across directories.
-- `SITE.postPerPage` drives pagination via `utils/getPageNumbers.ts`; `SITE.ogImage` is the fallback OG image.
-- Add a social link by editing `SOCIALS` (and `SocialMedia`/`assets/socialIcons.ts` for a new network).
+- Import with the single alias `@/*` (`@/config`, `@/utils/...`, `@/components/...`).
+- Site values (URL, socials, pagination, features) belong in `../astro-paper.config.ts`; `config.ts` only resolves defaults.
+- Add a social network by adding `assets/icons/socials/<name>.svg` and a `socials` entry with that `name`.
 
 ### Testing Requirements
 
@@ -70,10 +68,10 @@ Never put an `AGENTS.md` (or any stray `.md`) under `pages/` or `data/blog/`: As
 
 ### Internal
 
-`../public/` (static files), `../tests/`, `../e2e/`.
+`../astro-paper.config.ts`, `../public/` (static files), `../tests/`, `../e2e/`.
 
 ### External
 
-`astro`, `astro/zod`, `astro/loaders`.
+`astro` (`astro:content`, `astro:i18n`, `astro:assets`, `astro:env/client`, `astro:transitions`), `astro/zod`, `astro/loaders`.
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

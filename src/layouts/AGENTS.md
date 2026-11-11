@@ -1,43 +1,40 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # layouts
 
 ## Purpose
 
-Page shells. `Layout.astro` is the base HTML document; the others compose it with Header/Footer for specific page types.
+Page shells, vendored unchanged from upstream. `Layout.astro` is the only `<html>` document; `PostLayout.astro` wraps it for post pages. Header, Main and Footer are composed by each page, not by the layouts.
 
 ## Key Files
 
-| File                | Description                                                                                                                                                                                                                                                                                        |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Layout.astro`      | `<html>` shell: meta/OG/Twitter tags, canonical URL, IBM Plex Mono font, optional `PUBLIC_GOOGLE_SITE_VERIFICATION`, imports `@styles/base.css`, loads `/toggle-theme.js` inline. Props: `title?`, `author?`, `description?`, `ogImage?`, `ogType?: "website" \| "article"` (defaults from `SITE`) |
-| `Main.astro`        | Breadcrumbs + `<main id="main-content">` with h1/description and slot. Props: `pageTitle`, `pageDesc?`. Used by Posts, search, tags pages                                                                                                                                                          |
-| `Posts.astro`       | Paginated post list (Layout + Header + Main + Card + Footer + Prev/Next `LinkButton`s). Props: `pageNum`, `totalPages`, `posts`. Card links use `slugify(data)`                                                                                                                                    |
-| `PostDetails.astro` | Single post: `render(post)` to `Content`, back button, `Datetime`, tags. Prop: `post: CollectionEntry<"blog">`. OG image is `ogImage` or `<title>.png` (route `src/pages/[ogTitle].png.ts`)                                                                                                        |
-| `AboutLayout.astro` | Layout for `pages/about.md` (markdown `layout:`). Prop: `frontmatter: { title, description? }`                                                                                                                                                                                                     |
+| File               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Layout.astro`     | `<html>` shell: canonical, favicon, Google Sans Code `<Font>` (preloads latin 400), title/description, OG and Twitter tags (`og:image` from `resolveDefaultOgImagePath`), RSS autodiscovery, empty `theme-color` meta, `head` slot, optional Google verification, inline FOUC script (sets `data-theme`, exposes `window.__theme`), `<ClientRouter />`, bundled `import "@/scripts/theme"`. Imports `@/styles/global.css`. Props: `title?`, `description?`, `ogImage?`, `canonicalURL?` |
+| `PostLayout.astro` | `Layout` plus `og:type=article`, `article:published_time`/`modified_time` and `BlogPosting` JSON-LD (`<` escaped so a title cannot close the script) in the `head` slot. Props: `Layout` props plus `pubDatetime?`, `modDatetime?`. Used by `src/pages/posts/[...slug]/index.astro`                                                                                                                                                                                                     |
 
 ## For AI Agents
 
 ### Working In This Directory
 
-- `Layout.astro` is the only file with `<html>`; do not nest layouts except as Layout wraps content.
-- Pages pass `activeNav` to `Header` themselves (Posts/AboutLayout set it; `PostDetails` does not).
-- `Main.astro`, `PostDetails.astro`, `Posts.astro` have scoped styles that need `@reference "../styles/tailwind.css";`. `Layout.astro` and `AboutLayout.astro` have none.
+- Keep these upstream bytes; site values come from `astro-paper.config.ts`.
+- The inline FOUC script and `src/scripts/theme.ts` share the `theme` localStorage key and the `data-theme` attribute; change them together.
+- `<ClientRouter />` enables View Transitions, so client scripts must re-run on `astro:after-swap` / `astro:page-load`.
 
 ### Testing Requirements
 
-- E2E: `e2e/posts.spec.ts`, `e2e/navigation.spec.ts`, `e2e/og-images.spec.ts` (meta/OG tags), `e2e/dark-mode.spec.ts`, `e2e/code-blocks.spec.ts` (PostDetails prose).
+- E2E: `e2e/og-images.spec.ts` (meta/OG tags), `e2e/dark-mode.spec.ts`, `e2e/posts.spec.ts`.
 - `tests/build.test.ts` needs `dist/` from `bun run build`.
 
 ## Dependencies
 
 ### Internal
 
-`@config`, `@components/*`, `@utils/slugify`, `@styles/base.css`, `public/toggle-theme.js`, `astro:content`.
+`@/config`, `@/utils/resolveDefaultOgImagePath`, `@/utils/withBase`, `@/scripts/theme`, `@/styles/global.css`.
 
 ### External
 
-`astro:content` `render`.
+`astro:assets` (`Font`), `astro:transitions` (`ClientRouter`).
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

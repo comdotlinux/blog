@@ -28,17 +28,22 @@ This is a personal blog built with AstroPaper, an Astro 7-based static site gene
 
 ## Architecture
 
-**Key Directories:**
-- `src/data/blog/` - Markdown blog posts with YAML frontmatter
-- `src/content.config.ts` - Content collection configuration (Content Layer API)
-- `src/content/_schemas.ts` - Zod schema for blog post frontmatter validation
-- `src/components/` - Astro components (all server-rendered)
-- `src/layouts/` - Page layout templates
-- `src/pages/` - Route definitions
-- `src/utils/` - Utility functions (sorting, slugifying, pagination, OG image generation)
-- `src/config.ts` - Site configuration (title, author, socials, posts per page)
+The theme is upstream AstroPaper v7.1.0 (commit `2e8bcbe6`). Keep upstream bytes; every deviation is listed under "Upstream delta" in `AGENTS.md`.
 
-**Component Pattern:** All components are Astro (`.astro`) including Search (Pagefind-based), Card, and Datetime.
+**Key Directories:**
+- `src/content/posts/` - Blog posts (`.md`/`.mdx`) with YAML frontmatter
+- `src/content/pages/about.md` - About page content
+- `src/content.config.ts` - Content collections and their Zod schemas (Content Layer API)
+- `astro-paper.config.ts` - Site configuration (URL, title, author, timezone, pagination, features, socials, share links)
+- `src/config.ts` - Resolves `astro-paper.config.ts` with defaults; do not put values here
+- `src/components/` - Shared Astro components (all server-rendered)
+- `src/layouts/` - `Layout.astro` and `PostLayout.astro`
+- `src/pages/` - Route definitions; post-page components in `src/pages/posts/[...slug]/_components/`
+- `src/i18n/` - UI strings (`useTranslations`)
+- `src/scripts/theme.ts` - Light/dark theme toggle (bundled client script)
+- `src/utils/` - Post paths, sorting, filtering, tags, slugs, timezone, rehype plugins, Shiki transformer
+
+**Component Pattern:** All components are Astro (`.astro`). Search is the Pagefind UI in `src/pages/search.astro`.
 
 ## Blog Post Frontmatter Schema
 
@@ -46,25 +51,25 @@ This is a personal blog built with AstroPaper, an Astro 7-based static site gene
 title: string (required)
 description: string (required)
 pubDatetime: date (required)
-author: string (optional)
-postSlug: string (optional)
+modDatetime: date | null (optional)
+author: string (default: site author)
 featured: boolean (optional)
 draft: boolean (optional)
 tags: string[] (default: ["others"])
-ogImage: string (optional)
+ogImage: image | string (optional)
+canonicalURL: string (optional)
+hideEditPost: boolean (optional)
+hideToc: boolean (optional)
+timezone: string (optional, IANA; empty means site timezone)
 ```
+
+The URL slug is the file name: `src/content/posts/foo.md` → `/posts/foo/`. Files and directories starting with `_` are not loaded.
 
 ## TypeScript Path Aliases
 
 ```
-@assets/*     → src/assets/*
-@components/* → src/components/*
-@content/*    → src/content/*
-@layouts/*    → src/layouts/*
-@pages/*      → src/pages/*
-@styles/*     → src/styles/*
-@utils/*      → src/utils/*
-@config       → src/config.ts
+@/*                   → src/*
+@/astro-paper.config  → astro-paper.config.ts
 ```
 
 ## Git Workflow
@@ -94,8 +99,8 @@ ogImage: string (optional)
 rm -rf dist                 # Start fresh like CI
 bun run lint                # 1. Linting (0 errors)
 bun run build               # 2. Build (must run before unit tests!)
-bun run test:run            # 3. Unit tests (94+ tests, requires dist/)
-bun run test:e2e            # 4. E2E tests (55+ tests)
+bun run test:run            # 3. Unit tests (50+ tests, requires dist/)
+bun run test:e2e            # 4. E2E tests (96+ tests)
 bun run lighthouse          # 5. Lighthouse CI (85%+ performance)
 ```
 
@@ -142,7 +147,9 @@ Changes: <brief description of what changed>
 
 Content collections use the new Content Layer API:
 - Config file at `src/content.config.ts` (not `src/content/config.ts`)
-- Uses `glob` loader: `loader: glob({ pattern: "**/*.md", base: "./src/data/blog" })`
+- Collection `posts`: `loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/posts" })`
+- Collection `pages`: same pattern, `base: "./src/content/pages"`
+- Never put `AGENTS.md` or any other non-content `.md` under `src/content/posts/`, `src/content/pages/` or `src/pages/`: it becomes an entry or a route
 - Zod imported from `astro/zod` (not `astro:content`)
 - Render method: `import { render } from "astro:content"; const { Content } = await render(post);`
 
@@ -152,30 +159,33 @@ Content collections use the new Content Layer API:
 - **Package Manager:** Bun 1.4.4
 - **Runtime:** Node.js 26.13.0 (for Astro internals)
 - **TypeScript:** 6.x. Do not move to 7 until `astro check` and typescript-eslint support it (both refuse to run on 7.0)
-- **Markdown:** `unified()` processor from `@astrojs/markdown-remark` in `astro.config.mjs`, needed for the remark TOC/collapse plugins (Astro 7 defaults to Sätteri)
+- **Markdown:** `unified()` processor from `@astrojs/markdown-remark` in `astro.config.ts` (Astro 7 defaults to Sätteri) with rehype plugins `rehypeHeadingIds`, `rehypeInlineToc` (deprecated, v8 removes it), `rehype-callouts`, `rehypeTableWrapper`; MDX via `@astrojs/mdx`
 - **ESLint:** v10 with flat config (`eslint.config.js`)
 - **Prettier:** v3 with Astro and Tailwind plugins
 - **Testing:** Vitest (unit), Playwright (e2e)
 - **Performance:** Lighthouse CI (min 85% score, config in `lighthouserc.json`)
 - **Search:** Pagefind (build-time indexing)
-- **Tailwind:** v4 with CSS-first config (`src/styles/tailwind.css`)
+- **Tailwind:** v4 with CSS-first config (`src/styles/global.css`, tokens in `src/styles/theme.css`)
 
 ## Key Libraries & Technical Details
 
 | Purpose | Library | Notes |
 |---------|---------|-------|
-| Date formatting | `dayjs` | Used in Datetime.astro |
-| Slug generation | `slugify` + `lodash.kebabcase` | kebabCase first, then slugify |
-| OG image generation | `satori` + `@resvg/resvg-js` | Outputs PNG (not SVG) |
-| Search | Pagefind | Build-time indexing, `<script is:inline>` for runtime |
-| Syntax highlighting | Shiki with `@shikijs/transformers` | Theme: one-dark-pro |
-| Tailwind scoped styles | `@reference` directive | Required in all `<style>` blocks |
+| Date formatting | `dayjs` (utc, timezone) | Datetime.astro, postFilter; site timezone `Europe/Berlin` |
+| Slug generation | `slugify` + `lodash.kebabcase` | slugify for ASCII, kebabCase when non-Latin chars are present |
+| OG image generation | `satori` + `sharp` | Outputs PNG; font read from the Astro Fonts API |
+| Font | Google Sans Code | Astro Fonts API (`fonts` in `astro.config.ts`, `<Font>` in Layout.astro) |
+| Search | Pagefind + `@pagefind/default-ui` | Build-time indexing; `copy-pagefind.mjs` copies the index to `public/pagefind/` for dev |
+| Syntax highlighting | Shiki with `@shikijs/transformers` | Themes: `github-light` / `github-dark`, plus the `fileName` transformer |
+| Callouts | `rehype-callouts` | Obsidian theme CSS imported in `global.css` |
 
 **Important patterns:**
-- All interactive components use `<script is:inline>` (no React/client-side hydration)
-- Tailwind v4 uses CSS-first config in `src/styles/tailwind.css` (no `tailwind.config.js`)
-- OG images route: `src/pages/[ogTitle].png.ts` generates PNG dynamically
-- Content path: `src/data/blog/` (not `src/content/blog/`)
+- No client framework. Client JS is bundled `<script>` (Astro-processed); `is:inline` only for the FOUC theme script and JSON-LD in the layouts and the post page script
+- Theme: inline FOUC script in `Layout.astro` sets `data-theme` before paint; `src/scripts/theme.ts` handles the toggle and View Transitions
+- Tailwind v4 uses CSS-first config in `src/styles/global.css` (no `tailwind.config.js`)
+- OG image routes: `src/pages/og.png.ts` (site default, used only when `public/astropaper-og.jpg` is missing) and `src/pages/posts/[...slug]/index.png.ts` (per post without `ogImage`)
+- Content path: `src/content/posts/` (not `src/data/blog/`)
+- Redirects: `public/_redirects` (Cloudflare, `/posts/1` → `/posts/` 301); `redirects` in `astro.config.ts` covers `astro preview` only
 
 ## Cloudflare Pages Deployment
 
@@ -194,3 +204,5 @@ Images for blog posts are stored in `public/assets/` organized by date:
 - `public/assets/20221227/` - GitHub Actions screenshots
 
 Reference in markdown as `/assets/YYYYMMDD/filename.png`
+
+Other files in `public/`: `astropaper-og.jpg` (default OG image), `favicon.svg`, `_redirects`, and a static copy of one pre-v7 OG PNG kept for old links. `robots.txt` is generated by `src/pages/robots.txt.ts`. Never put an `AGENTS.md` in `public/`: everything there is published.

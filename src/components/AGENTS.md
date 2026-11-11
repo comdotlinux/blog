@@ -1,54 +1,50 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-11-10 | Updated: 2026-11-10 -->
+<!-- Generated: 2026-11-10 | Updated: 2026-11-11 -->
 
 # components
 
 ## Purpose
 
-Reusable server-rendered Astro components. No client framework; the only client JS is in `Header.astro` and `Search.astro`.
+Shared server-rendered Astro components, vendored unchanged from upstream AstroPaper v7.1.0. No client framework. Post-page-only components live next to their route in `src/pages/posts/[...slug]/_components/`.
 
 ## Key Files
 
-| File                | Description                                                                                                                                   |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Breadcrumbs.astro` | Builds crumbs from `Astro.url.pathname`; collapses `/posts/N` into "Posts (page N)". No props                                                 |
-| `Card.astro`        | Post list item. Props: `href?`, `frontmatter: BlogFrontmatter`, `secHeading = true` (h2 vs h3). Renders `Datetime`                            |
-| `Datetime.astro`    | dayjs-formatted date and time. Props: `datetime`, `size?: "sm" \| "lg"`, `class?`                                                             |
-| `Footer.astro`      | Uses `Hr` and `Socials`; CC BY-NC-SA badge. Prop: `noMarginTop?`                                                                              |
-| `Header.astro`      | Nav, logo, theme toggle, mobile menu. Prop: `activeNav?: "posts" \| "tags" \| "about" \| "search"`. Reads `SITE`, `LOGO_IMAGE` from `@config` |
-| `Hr.astro`          | Divider. Props: `noPadding?`, `ariaHidden?`                                                                                                   |
-| `LinkButton.astro`  | Anchor wrapper with slot. Props: `href`, `className?`, `ariaLabel?`, `title?`, `disabled?`                                                    |
-| `Search.astro`      | Pagefind UI (input, status, results); no props. Dynamically imports `/pagefind/pagefind.js`, reads/writes `?q=`                               |
-| `Socials.astro`     | Active `SOCIALS` from `@config` rendered via `@assets/socialIcons`. Prop: `centered?`                                                         |
-| `Tag.astro`         | Tag link to `/tags/<lowercased name>`. Props: `name`, `size?: "sm" \| "lg"`                                                                   |
+| File                    | Description                                                                                                                                                                                      |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Breadcrumb.astro`      | Crumbs from `Astro.url.pathname` (base and locale stripped); collapses pagination segments. No props                                                                                             |
+| `Card.astro`            | Post list item. Props: `variant?: "h2" \| "h3"` plus a `CollectionEntry<"posts">`. Links via `getPostUrl`, sets `transition:name` via `toTransitionName`, renders `Datetime`                     |
+| `Datetime.astro`        | dayjs date in the post or site timezone (`resolveTimezone`); shows `modDatetime` when later. Props: `pubDatetime`, `modDatetime?`, `timezone?`, `size?`, `class?`                                |
+| `Footer.astro`          | `Socials` and copyright line. Props: `noMarginTop?` plus footer HTML attributes                                                                                                                  |
+| `Header.astro`          | Logo text, nav (archives link only when `features.showArchives`), search, theme toggle (`#theme-btn`), mobile menu. Bundled `<script>` for the menu                                              |
+| `LinkButton.astro`      | `<a>`, or `<span>` when `disabled`. Props: `disabled?` plus anchor HTML attributes                                                                                                               |
+| `Main.astro`            | `<main id="main-content">` with title/description and slot. Props: `pageTitle` (string or `[string, string]`), `pageDesc?`, `class?`. Bundled `<script>` stores the back URL in `sessionStorage` |
+| `Pagination.astro`      | Prev/next for an Astro `Page<CollectionEntry<"posts">>`. Prop: `page`                                                                                                                            |
+| `ResponsiveTable.astro` | MDX table wrapper. Props: `class?`, `variant?: "minimal" \| "striped" \| "striped-minimal"`. `utils/rehypeTableWrapper.js` skips tables inside it                                                |
+| `Socials.astro`         | `config.socials` with icons from `@/assets/icons/socials/<name>.svg`; title is `linkTitle` or "`<site.title>` on `<Name>`"                                                                       |
+| `Tag.astro`             | Link to `tags/<tag>/` via `getRelativeLocaleUrl`. Props: `tag` (slug), `tagName` (label), `size?: "sm" \| "lg"`                                                                                  |
 
 ## For AI Agents
 
 ### Working In This Directory
 
-- Props are declared with `export interface Props` and destructured from `Astro.props`; keep that style.
-- `Search.astro` uses `<script is:inline>` (needed for the runtime `/pagefind/` import). `Header.astro` uses a plain `<script>` (Astro-bundled, not inline), unlike the rule in CLAUDE.md.
-- Scoped `<style>` blocks must start with `@reference "../styles/tailwind.css";` before `@apply` (Breadcrumbs, Footer, Header, LinkButton, Socials, Tag). Card, Datetime, Hr, Search use utility classes only.
-- Theme colors are `skin-*` utilities defined in `src/styles/tailwind.css`.
+- These are upstream bytes; prefer config (`astro-paper.config.ts`) over edits. Any edit becomes a row in "Upstream delta" in `../../AGENTS.md`.
+- Props are declared with `type Props = ...` and destructured from `Astro.props`.
+- UI strings come from `useTranslations(Astro.currentLocale)` (`@/i18n`); internal links use `getRelativeLocaleUrl` from `astro:i18n`.
+- Styling is Tailwind utilities on design tokens (`bg-background`, `text-accent`, ...) from `src/styles/theme.css`; no scoped `<style>` blocks here.
 
 ### Testing Requirements
 
-- Unit: `tests/components/Card.test.ts`, `tests/components/Datetime.test.ts`.
-- E2E: `e2e/navigation.spec.ts` (Header, Breadcrumbs), `e2e/dark-mode.spec.ts` (theme toggle), `e2e/search.spec.ts` (Search; needs `bun run build` for the Pagefind index), `e2e/tags.spec.ts`.
-
-### Common Patterns
-
-- `class:list` for conditional classes (Datetime); template-string classes elsewhere.
-- Tag links lowercase the name only; post slugs come from `@utils/slugify`.
+- Unit: see `../../tests/AGENTS.md`.
+- E2E: `e2e/navigation.spec.ts` (Header, Breadcrumb), `e2e/dark-mode.spec.ts` (theme toggle), `e2e/homepage.spec.ts` (Socials), `e2e/tags.spec.ts`.
 
 ## Dependencies
 
 ### Internal
 
-`@config`, `@assets/socialIcons`, `@content/_schemas` (`BlogFrontmatter`), `@styles/tailwind.css`.
+`@/config`, `@/i18n`, `@/utils/*`, `@/assets/icons/*`.
 
 ### External
 
-`dayjs`, Pagefind (runtime, generated at build).
+`dayjs` (utc, timezone plugins), `astro:i18n`, `astro:content`.
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->
