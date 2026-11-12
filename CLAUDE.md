@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog built with AstroPaper, an Astro 7-based static site generator. The blog is deployed to Cloudflare Pages at https://b.kulkarni.cloud/.
+This is a personal blog built with AstroPaper, an Astro 7-based static site generator. The blog is deployed to Cloudflare Pages at https://blog.kulkarni.cloud/.
 
 **Stack:** Astro 7 + TypeScript 6 + TailwindCSS v4 + Bun
 
@@ -14,6 +14,7 @@ This is a personal blog built with AstroPaper, an Astro 7-based static site gene
 |---------|---------|
 | `bun run dev` | Start dev server at localhost:4321 |
 | `bun run build` | Build production site to `./dist/` |
+| `bun run clean` | Remove `dist/` and `public/pagefind/` |
 | `bun run preview` | Preview production build locally |
 | `bun run lint` | Run ESLint (flat config) |
 | `bun run lint:fix` | Run ESLint with auto-fix |
@@ -96,7 +97,7 @@ The URL slug is the file name: `src/content/posts/foo.md` → `/posts/foo/`. Fil
 **REQUIRED:** Before making ANY commit, you MUST run these checks locally IN THIS EXACT ORDER and ensure they ALL pass:
 
 ```bash
-rm -rf dist                 # Start fresh like CI
+bun run clean               # Start fresh like CI (removes dist/ and public/pagefind/)
 bun run lint                # 1. Linting (0 errors)
 bun run build               # 2. Build (must run before unit tests!)
 bun run test:run            # 3. Unit tests (50+ tests, requires dist/)
