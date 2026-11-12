@@ -42,6 +42,12 @@ export async function onRequest(context: {
   const { request, env, next } = context;
   const { pathname } = new URL(request.url);
 
+  // Functions run before public/_redirects, so the gate would otherwise answer /posts/1/ with 401.
+  if (pathname === "/posts/1" || pathname === "/posts/1/")
+    return new Response(null, {
+      status: 301,
+      headers: { Location: "/posts/" },
+    });
   if (env.PREVIEW === "true") return next();
   if (isPublicPath(pathname)) return next();
   if (!env.TURNSTILE_SECRET_KEY)
