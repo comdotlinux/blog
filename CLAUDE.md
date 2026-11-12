@@ -100,7 +100,7 @@ The URL slug is the file name: `src/content/posts/foo.md` → `/posts/foo/`. Fil
 bun run clean               # Start fresh like CI (removes dist/ and public/pagefind/)
 bun run lint                # 1. Linting (0 errors)
 bun run build               # 2. Build (must run before unit tests!)
-bun run test:run            # 3. Unit tests (71+ tests, requires dist/)
+bun run test:run            # 3. Unit tests (73+ tests, requires dist/)
 bun run test:e2e            # 4. E2E tests (96+ tests)
 bun run lighthouse          # 5. Lighthouse CI (85%+ performance)
 ```

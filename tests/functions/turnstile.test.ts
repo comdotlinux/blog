@@ -105,6 +105,15 @@ describe("onRequest", () => {
     ).toBe(200);
   });
 
+  it.each(["/posts/1", "/posts/1/"])(
+    "redirects %s to /posts/ before the gate",
+    async path => {
+      const res = await onRequest({ request: req(path), env, next: ok });
+      expect(res.status).toBe(301);
+      expect(res.headers.get("Location")).toBe("/posts/");
+    }
+  );
+
   it("fails closed when the secret is missing", async () => {
     const res = await onRequest({
       request: req("/"),
