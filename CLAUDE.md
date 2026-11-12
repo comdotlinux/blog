@@ -100,7 +100,7 @@ The URL slug is the file name: `src/content/posts/foo.md` → `/posts/foo/`. Fil
 bun run clean               # Start fresh like CI (removes dist/ and public/pagefind/)
 bun run lint                # 1. Linting (0 errors)
 bun run build               # 2. Build (must run before unit tests!)
-bun run test:run            # 3. Unit tests (50+ tests, requires dist/)
+bun run test:run            # 3. Unit tests (71+ tests, requires dist/)
 bun run test:e2e            # 4. E2E tests (96+ tests)
 bun run lighthouse          # 5. Lighthouse CI (85%+ performance)
 ```
@@ -194,6 +194,16 @@ Content collections use the new Content Layer API:
 - **Output directory:** `dist`
 - **Node.js version:** read from `.nvmrc`. Cloudflare Pages does not read `mise.toml`, so `.nvmrc` must equal the `node` pin in `mise.toml`; CI fails if they differ
 - **Bun version:** Cloudflare Pages takes it only from the `BUN_VERSION` environment variable in the Pages project settings; keep it equal to the `bun` pin in `mise.toml`
+- **Pages project:** `blog` (subdomain `blog-7qk.pages.dev`). Manage it with the `cloudflare` CLI, and ask the user before every `cloudflare` command
+
+### Bot Protection (Cloudflare Turnstile)
+
+The production site is gated at the edge, as in the bio repo: no page is served until Cloudflare Turnstile has been passed.
+- `functions/_middleware.ts` checks every request for the `blog_session` cookie. Without it, page loads get a self-contained challenge page (401, `noindex`) and other requests a bare 401. Public without the cookie: `/api/*`, `/rss.xml`, sitemaps, `/robots.txt`, favicons and OG images.
+- The challenge page posts the token to `functions/api/verify-turnstile.ts`, which verifies it with Cloudflare siteverify and sets `blog_session` (HMAC-signed with `TURNSTILE_SECRET_KEY`, `HttpOnly; Secure; SameSite=Lax`, 24 h). The page reloads into the requested URL.
+- Environment variables (Pages project settings): `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` for Production; `PREVIEW=true` for Preview, which leaves preview deployments open.
+- Trade-off the user accepted: search engines and link-preview bots cannot read post pages.
+- Local dev, `astro preview`, e2e and Lighthouse run without the gate (Functions only run on Cloudflare). Unit tests: `tests/functions/turnstile.test.ts`.
 
 ## Static Assets
 
