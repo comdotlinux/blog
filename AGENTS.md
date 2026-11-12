@@ -37,6 +37,7 @@ Personal blog ("Developer Musings") built on AstroPaper v7.1.0: Astro 7, TypeScr
 | `src/` | Site source: content, components, layouts, pages, utils (see `src/AGENTS.md`) |
 | `tests/` | Vitest unit tests; need `dist/` (see `tests/AGENTS.md`) |
 | `e2e/` | Playwright tests (see `e2e/AGENTS.md`) |
+| `functions/` | Cloudflare Pages Functions: Turnstile gate in front of the whole site (see `functions/AGENTS.md`) |
 | `public/` | Static files served as-is, documented in "Static files" below (no `AGENTS.md` inside) |
 | `old-posts/` | Unused upstream AstroPaper demo posts (see `old-posts/AGENTS.md`) |
 | `.github/` | CI workflow (see `.github/AGENTS.md`) |
@@ -88,6 +89,7 @@ The four PNGs in `20221008/` and `20221010/` are Git LFS objects (`.gitattribute
 | `src/assets/icons/socials/{youtube,reddit,mastodon}.svg` | ours | Icons upstream lacks |
 | `AGENTS.md`, `src/**/AGENTS.md`, `old-posts/**`, `tests/**`, `e2e/**`, `.github/AGENTS.md`, `.github/workflows/AGENTS.md` | ours | Docs and tests |
 | `public/_redirects` | ours | `/posts/1(/)` 301 |
+| `functions/**`, `tests/functions/**` | ours | Turnstile edge gate (Pages Functions), ported from the bio repo |
 | `src/pages/index.astro` | upstream, hero changed | Hero `h1` "Musings of A Developer" and our intro paragraph replace upstream's demo greeting, description and README link |
 | `public/On the topic of tools, their versions & automated installations.png` | ours | Old OG URL kept alive |
 | `public/favicon.svg`, `public/favicon-old.svg`, `public/astropaper-og.jpg`, `public/assets/**` | ours | Site assets |

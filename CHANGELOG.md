@@ -1,3 +1,27 @@
+## 2026-11-12 21:40
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 71 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.8% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** The local build runs without the gate: Pages Functions only run on Cloudflare. Live site not measured.
+
+Changes: Gate the whole site behind Cloudflare Turnstile, ported from the bio repo. `functions/_middleware.ts` serves a challenge page (401, `noindex`) without a valid `blog_session` cookie; `functions/api/verify-turnstile.ts` verifies the token and sets the HMAC-signed cookie (24 h). Feeds, sitemaps, robots.txt, favicons and OG images stay public; `PREVIEW=true` opens preview deployments; a missing secret fails closed. 21 new unit tests in `tests/functions/turnstile.test.ts`.
+
 ## 2026-11-12 16:47
 
 | Check | Status | Details |
