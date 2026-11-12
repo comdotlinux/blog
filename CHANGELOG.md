@@ -1,3 +1,27 @@
+## 2026-11-12 22:04
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 73 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.8% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None. Live site not measured.
+
+Changes: Pin the Cloudflare CLI (`cloudflare-cf = "0.15.0"`, command `cloudflare`) in `mise.toml`; CI's `jdx/mise-action` now installs it too. CI step renamed to match. Merged with #14 (CHANGELOG conflict resolved, both entries kept).
+
 ## 2026-11-12 21:56
 
 | Check | Status | Details |

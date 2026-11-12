@@ -156,7 +156,7 @@ Content collections use the new Content Layer API:
 
 ## Tooling
 
-- **Versions:** `mise.toml` pins Node.js and Bun (`mise install`); CI installs them with `jdx/mise-action`
+- **Versions:** `mise.toml` pins Node.js, Bun and the Cloudflare CLI (`cloudflare-cf`, command `cloudflare`) (`mise install`); CI installs them with `jdx/mise-action`
 - **Package Manager:** Bun 1.4.4
 - **Runtime:** Node.js 26.13.0 (for Astro internals)
 - **TypeScript:** 6.x. Do not move to 7 until `astro check` and typescript-eslint support it (both refuse to run on 7.0)
