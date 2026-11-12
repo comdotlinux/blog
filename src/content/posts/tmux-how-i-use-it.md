@@ -29,12 +29,12 @@ We are going to go about this in a manner that even if you leave after some sect
 
 ## Intro (please don't stop after the intro ;) )
 
-`tmux` (modern - by linux standards) or `screen` (a bit older) are terminal multiplexers -- big words, but they allow you to manage multiple terminals easily. They do more than that, and they shine when connecting to remote servers but are just as useful for local development as we will see by the end.  
+`tmux` (modern, by Linux standards) or `screen` (a bit older) are terminal multiplexers: big words, but they allow you to manage multiple terminals easily. They do more than that, and they shine when connecting to remote servers but are just as useful for local development as we will see by the end.  
 Using tmux requires a learning curve but then gets much more easy real soon and with huge productivity benefits
 
 ## Preset, Just install and use
 
-Using Screen or Tmux requires some learning and setup, they are extremely flexible and non-opinionated, so it is possible to customize them (within limits - outside them, you contribute to the source code) as much as you want, but this means the sane defaults are mostly bare, if you install tmux and run it in a terminal you might not even notice anything except you have to press `Ctrl+D` or `exit` twice instead of the usual once :)
+Using Screen or Tmux requires some learning and setup, they are extremely flexible and non-opinionated, so it is possible to customize them (within limits; beyond them, you contribute to the source code) as much as you want, but this means the sane defaults are mostly bare, if you install tmux and run it in a terminal you might not even notice anything except you have to press `Ctrl+D` or `exit` twice instead of the usual once :)
 
 To help with this there is a project that takes an opinionated approach and presents you with a pre-customized ready to use tmux setup that will go a long way for you. After installation simply press `Ctrl+A` and you are presented with a selection to select the keys, I usually select 1 `screen` keys as I am already familiar with them, however the backend by default ([AFAIK](https://www.urbandictionary.com/define.php?term=afaik)) is `tmux`. Here is how it looks for me.
 
@@ -126,7 +126,7 @@ The Developer Setup That You Need on Every Restart of a Computer / Every Restart
 
 Yes, You can use tmux to do whatever you want, start any program, any server and as many windows + sub panes and easily navigate between them. Let's list some benefits before we go?
 
-- Setup-Once-Benefit-Everytime (restart then open terminal and tmux a -- bam, git pull, compile, start servers and system monitoring any anything else you want)
+- Setup-Once-Benefit-Everytime (restart then open terminal and tmux a. Bam: git pull, compile, start servers and system monitoring any anything else you want)
 
 - No Context Switching, when trying to find multiple terminals, rename the windows and move easily just with `Shift` or `Ctrl` and arrow keys
 
@@ -145,6 +145,6 @@ There are numerous pages and even some books on tmux I think, just search, and y
 
 Don't forget to let me know how you like and use tmux indifferent ways, would love to integrate some tricks into my own config to use going forward.
 
-So Young Padawans -- Go Learn the ways of the tmux. May tmux Be with you!
+So, young Padawans, go learn the ways of the tmux. May tmux Be with you!
 
 ---

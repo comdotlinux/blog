@@ -1,3 +1,27 @@
+## 2026-11-12 16:47
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 50 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.8% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None. Live site not measured.
+
+Changes: Fix the asdf follow-up post: the two `asdf install <name> latest` commands were bare text, so `<name>` and `<version>` rendered as HTML tags and vanished. They are now one `bash` code block, with the "Install latest stable version" line as a shell comment (as in the asdf docs) instead of a stray heading in the table of contents. Recast the prose ` -- ` (rendered as em dashes by smartypants) and spaced hyphens in the asdf, tools and tmux posts with commas, colons, semicolons, periods or parentheses; the no-em-dashes checker now reports 0 hits for all posts and `AGENTS.md` files. Switch `site.url` from `https://b.kulkarni.cloud/` (no DNS record) to `https://blog.kulkarni.cloud/`, so canonical, RSS, sitemap, robots and `og:image` URLs point at the live host; RSS readers see new item links once. Host updated in two e2e expectations (user-approved). Add `bun run clean` (removes `dist/` and `public/pagefind/`) as the first pre-commit step.
+
 ## 2026-11-11 22:00
 
 | Check | Status | Details |

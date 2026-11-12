@@ -9,6 +9,7 @@
   "packageManager": "bun@1.4.4",
   "scripts": {
     "dev": "astro dev",
+    "clean": "node -e \"for (const d of ['dist','public/pagefind']) require('fs').rmSync(d, { recursive: true, force: true })\"",
     "build": "astro check && astro build && pagefind --site dist && node copy-pagefind.mjs",
     "preview": "astro preview",
     "sync": "astro sync",

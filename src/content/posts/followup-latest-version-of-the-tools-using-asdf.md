@@ -33,18 +33,19 @@ me in the correct direction if you find something and I will update it here.
   keeping you at the latest version. However, to sync the versions you use yourself and no one else on the team is a task
   that almost guaranteed to be forgotten. That brings us to the question from the earlier post.
 
-> If I don't care about the version of a tool just that I have the latest, what should I do? -- rephrased ;)
+> If I don't care about the version of a tool just that I have the latest, what should I do? (rephrased ;))
 >
 > Aashish
 
 - There is a way described
   at `asdf` [documentation](https://asdf-vm.com/manage/versions.html#install-latest-stable-version)
 
+```bash
 asdf install <name> latest
 
-## Install latest stable version that begins with a given string.
-
+# Install latest stable version that begins with a given string.
 asdf install <name> latest:<version>
+```
 
 However, I have not used it myself recently and earlier it did not work.
 

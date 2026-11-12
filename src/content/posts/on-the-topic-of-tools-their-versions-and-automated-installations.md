@@ -20,7 +20,7 @@ Impatient? then these are the tools we will discuss
 
 - [afx](https://babarot.me/afx/) the command-line package manager
 
-We developers love tools, we like to create them, use them and hope that they make our lives better as we are going about our day doing the things we do. You know don't you? "Working Hard or Hardly Working" -- I don't know who said that but I use it every chance I get.
+We developers love tools, we like to create them, use them and hope that they make our lives better as we are going about our day doing the things we do. You know don't you? "Working Hard or Hardly Working": I don't know who said that but I use it every chance I get.
 
 ![So many tools and tool boxes](/assets/20221008/so-many-tools-and-tool-boxes-high-quality-digital-art.png)
 
@@ -71,7 +71,7 @@ So, If you don't want to install manually then the following tools are for you!
 
 It's simple really, let's go though
 
-- Install [asdf](https://asdf-vm.com/guide/getting-started.html#_1-install-dependencies) -- required only once :)
+- Install [asdf](https://asdf-vm.com/guide/getting-started.html#_1-install-dependencies) (required only once :))
 
 - Get all available plugins and find the tool you are looking for
   - e.g.

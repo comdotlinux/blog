@@ -35,11 +35,11 @@ test.describe("URL preservation", () => {
       m => m[1]
     );
     expect(links).toEqual([
-      "https://b.kulkarni.cloud/posts/some-interesting-features-in-github-actions/",
-      "https://b.kulkarni.cloud/posts/gradle-tricks/",
-      "https://b.kulkarni.cloud/posts/tmux-how-i-use-it/",
-      "https://b.kulkarni.cloud/posts/followup-latest-version-of-the-tools-using-asdf/",
-      "https://b.kulkarni.cloud/posts/on-the-topic-of-tools-their-versions-and-automated-installations/",
+      "https://blog.kulkarni.cloud/posts/some-interesting-features-in-github-actions/",
+      "https://blog.kulkarni.cloud/posts/gradle-tricks/",
+      "https://blog.kulkarni.cloud/posts/tmux-how-i-use-it/",
+      "https://blog.kulkarni.cloud/posts/followup-latest-version-of-the-tools-using-asdf/",
+      "https://blog.kulkarni.cloud/posts/on-the-topic-of-tools-their-versions-and-automated-installations/",
     ]);
   });
 

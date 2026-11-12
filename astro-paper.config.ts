@@ -4,7 +4,7 @@ const title = "Developer Musings";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://b.kulkarni.cloud/",
+    url: "https://blog.kulkarni.cloud/",
     title,
     description: "Umm, many things mostly software though, I hope",
     author: "Guruprasad Kulkarni",

@@ -15,7 +15,7 @@ test.describe("OG Images", () => {
       const content = await page
         .locator('meta[property="og:image"]')
         .getAttribute("content");
-      expect(content).toBe(`https://b.kulkarni.cloud/posts/${slug}/index.png`);
+      expect(content).toBe(`https://blog.kulkarni.cloud/posts/${slug}/index.png`);
 
       const response = await request.get(new URL(content!).pathname);
       expect(response.status()).toBe(200);
