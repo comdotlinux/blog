@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Node.js and Bun from mise.toml
+      - name: Install tools from mise.toml (Node.js, Bun, Cloudflare CLI)
         uses: jdx/mise-action@v5
 
       - name: Check .nvmrc matches mise.toml

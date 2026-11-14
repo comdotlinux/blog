@@ -46,3 +46,6 @@ pnpm-debug.log*
 
 # oh-my-claudecode
 .omc/
+
+# openidea notes
+.openidea/
