@@ -1,3 +1,27 @@
+## 2026-11-15 17:27
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.8% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None for the blog. Live site not measured (Turnstile gate). CMS checks: format clean, 175 unit tests passed.
+
+Changes: The CMS proxy now says why the GitHub App token could not be created (GitHub's status and message, or an unusable private key) instead of a bare 502; no key or token is ever included.
+
 ## 2026-11-15 14:22
 
 | Check | Status | Details |
