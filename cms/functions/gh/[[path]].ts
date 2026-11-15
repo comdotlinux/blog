@@ -213,7 +213,7 @@ export function githubPath(
   if (pathname === GRAPHQL_PATH) return { raw: "/graphql", path: "/graphql" };
   if (!pathname.startsWith(`${REST_PREFIX}/`)) return null;
   const raw = pathname.slice(REST_PREFIX.length);
-  if (/%2f/i.test(raw)) return null;
+  if (/%(2f|5c|2e)/i.test(raw)) return null;
   let path: string;
   try {
     path = decodeURIComponent(raw);
@@ -354,11 +354,24 @@ export async function onRequest({
   request: Request;
   env: Env;
 }): Promise<Response> {
+  const url = new URL(request.url);
+  // Sveltia's "View on GitHub" links derive from api_root: /gh/<owner>/<repo>/... Plain redirect, no token.
+  if (
+    request.method === "GET" &&
+    (url.pathname === `/gh/${OWNER}/blog` ||
+      url.pathname.startsWith(`/gh/${OWNER}/blog/`))
+  )
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: `https://github.com${url.pathname.slice(3)}${url.search}`,
+        "Cache-Control": "no-store",
+      },
+    });
   if (!configured(env)) {
     console.error("cms proxy: GitHub App settings missing or invalid");
     return json(503, "CMS GitHub App not configured");
   }
-  const url = new URL(request.url);
   if (!sameOrigin(request, url.origin)) return json(403, "Forbidden");
   const now = Math.floor(Date.now() / 1000);
   if (!(await verifyAccessJwt(request, env.OWNER_EMAIL, now)))
@@ -405,8 +418,9 @@ export async function onRequest({
     const value = request.headers.get(name);
     if (value) headers[name] = value;
   }
-  const upstreamUrl = new URL(`${GITHUB}${upstreamRaw}${url.search}`);
-  if (upstreamUrl.origin !== GITHUB) return json(404, "Not Found");
+  // String concatenation onto the fixed origin; githubPath() already refused `//`, dots and encoded slashes.
+  const upstreamUrl = `${GITHUB}${upstreamRaw}${url.search}`;
+  if (new URL(upstreamUrl).origin !== GITHUB) return json(404, "Not Found");
 
   let res: Response;
   try {
@@ -426,12 +440,6 @@ export async function onRequest({
     const value = res.headers.get(name);
     if (value) out.set(name, value);
   }
-  const link = res.headers.get("Link");
-  if (link)
-    out.set(
-      "Link",
-      link.replaceAll(`${GITHUB}/`, `${url.origin}${REST_PREFIX}/`)
-    );
 
   if (res.status === 200 && method === "GET" && target.path === REPO) {
     const repo = (await res.json()) as Record<string, unknown>;

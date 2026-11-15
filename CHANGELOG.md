@@ -1,3 +1,27 @@
+## 2026-11-15 14:22
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.1% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 89%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None for the blog (one /about run at 89%, others 99%). Live site not measured (Turnstile gate). CMS checks: format clean, 173 unit, 2 integration, 2 e2e passed. `blog-cms` preview build log: "Found Functions directory at /functions. Uploading.", `uses_functions: true`.
+
+Changes: CMS proxy review fixes: also reject `%2E` and `%5C` in proxied paths, drop the `Link` header (GitHub page links use `/repositories/<id>/` and would 404), redirect Sveltia's "View on GitHub" links (`/gh/comdotlinux/blog/...`) to github.com; tests for query-string forwarding, `User-Agent` and API version on every upstream call, `update-branch`, `blog-other` and ref rules; README notes on Publish, the 24 h Access session and the live check order.
+
 ## 2026-11-15 14:12
 
 | Check | Status | Details |

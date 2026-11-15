@@ -28,6 +28,9 @@ Field notes:
   - allows only the writes Sveltia's editorial workflow makes: no `DELETE`, no PR merge, ref updates and GraphQL commits only on `cms/` branches, GraphQL mutations limited to `createCommitOnBranch`, `createRef`, `convertPullRequestToDraft`, `markPullRequestReadyForReview` and `disablePullRequestAutoMerge`;
   - serves `GET /user` from the public `comdotlinux` profile and adds `permissions.push` to the repository response, because GitHub answers installation tokens without either.
 - Missing or invalid settings return 503 "CMS GitHub App not configured"; nothing reaches GitHub.
+- Sveltia's "View on GitHub" links point at `/gh/comdotlinux/blog/...`; the function redirects exactly that prefix to `github.com` (no token involved).
+- Sveltia's **Publish** tries auto-merge (`enablePullRequestAutoMerge`) and then a REST merge; the proxy refuses both with 403, so Publish shows an error and nothing is merged. Merge on GitHub instead.
+- The Access session lasts 24 hours. When it ends, calls start failing with 401: reload `/admin/` to pass Access again.
 
 ## One-time setup (owner)
 
@@ -62,8 +65,13 @@ Until these steps are done the editor shows "Signing in" errors; the proxy fails
    Do not add them to Preview: the config points at the production host, so previews never need them, and every pushed branch would otherwise run with the key.
 
 7. **Redeploy** production (variables apply to new deployments): Deployments, latest production deployment, "Retry deployment", or merge the next change.
-8. **Move both `.pem` files** into encrypted storage of your choice.
-9. **Check**: open `/admin/`, "Sign In with GitHub", the post list loads. Save a test post: branch `cms/posts/<slug>` and a pull request by the App bot appear. Close that pull request on GitHub. In DevTools, Application, Local Storage holds `cf-access` and no `ghs_` value.
+8. **Check** (keep the `.pem` files until this passes; a failed check may need the key again):
+   - Open `/admin/`, "Sign In with GitHub": the post list loads.
+   - Save a test post: branch `cms/posts/<slug>` and a pull request by the App bot appear.
+   - Open the Sveltia workflow view for that post (it lists the pull request and its checks). If it shows an error about checks or statuses, add the repository permissions "Checks: Read-only" and "Commit statuses: Read-only" to the App and accept the new permissions on the installation; nothing in the proxy needs to change.
+   - Close the test pull request on GitHub.
+   - In DevTools, Application, Local Storage holds `cf-access` and no `ghs_` value.
+9. **Move both `.pem` files** into encrypted storage of your choice.
 
 If the key may be exposed: in the App settings revoke the key (and suspend the installation if needed), generate a new one and replace `GITHUB_APP_PRIVATE_KEY`. Rotate the key yearly.
 

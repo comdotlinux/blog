@@ -163,6 +163,10 @@ describe("githubPath", () => {
     "/gh/api/v3/user/repository_invitations",
     "/gh/api/v3/repos/comdotlinux/other",
     "/gh/api/v3/repos/comdotlinux/blogger",
+    "/gh/api/v3/repos/comdotlinux/blog-other",
+    "/gh/api/v3/repos/comdotlinux/blog/contents/%2e",
+    "/gh/api/v3/repos/comdotlinux/blog/contents/a%2Emd",
+    "/gh/api/v3/repos/comdotlinux/blog/contents/a%5Cb",
     "/gh/api/v3/repos/comdotlinux/blog/../other",
     "/gh/api/v3/repos/comdotlinux/blog/%2e%2e/%2e%2e/other",
     "/gh/api/v3/repos/comdotlinux/blog/.",
@@ -228,6 +232,10 @@ describe("write rules", () => {
     ["POST", "/repos/comdotlinux/blog/dispatches"],
     ["POST", "/repos/comdotlinux/blog/forks"],
     ["PATCH", "/repos/comdotlinux/blog"],
+    ["PUT", "/repos/comdotlinux/blog/pulls/12/update-branch"],
+    ["POST", "/repos/comdotlinux/blog/git/refs/heads/cms/posts/a"],
+    ["PATCH", "/repos/comdotlinux/blog/git/refs/heads/cmsx/a"],
+    ["PATCH", "/repos/comdotlinux/blog/git/refs/tags/cms/a"],
   ])("blocks %s %s", (method, path) => {
     expect(proxy.writeAllowed(method, path)).toBe(false);
   });
@@ -501,8 +509,41 @@ describe("forwarding", () => {
     expect(res.headers.get("X-RateLimit-Remaining")).toBe("4999");
     expect(res.headers.get("Set-Cookie")).toBeNull();
   });
+});
 
-  it("rewrites Link headers to the proxy", async () => {
+describe("upstream request", () => {
+  it("forwards the query string verbatim", async () => {
+    const { calls } = fakeFetch({ keys: [jwk] });
+    await call(
+      "/gh/api/v3/repos/comdotlinux/blog/git/trees/main%3Asrc/content/posts?recursive=1&per_page=100"
+    );
+    expect(githubCalls(calls).map(c => c.url)).toEqual([
+      "https://api.github.com/repos/comdotlinux/blog/git/trees/main%3Asrc/content/posts?recursive=1&per_page=100",
+    ]);
+  });
+
+  it("sends User-Agent and the API version on every upstream request", async () => {
+    const { calls } = fakeFetch({ keys: [jwk] });
+    await call("/gh/api/v3/user");
+    await call("/gh/api/v3/repos/comdotlinux/blog/pulls", {
+      method: "POST",
+      body: "{}",
+    });
+    await call("/gh/api/graphql", {
+      method: "POST",
+      body: JSON.stringify({ query: "{ viewer { login } }" }),
+    });
+    const upstream = calls.filter(c =>
+      c.url.startsWith("https://api.github.com/")
+    );
+    expect(upstream.length).toBe(4); // one token mint plus three calls
+    for (const c of upstream) {
+      expect(c.init.headers["User-Agent"]).toBe("blog-cms");
+      expect(c.init.headers["X-GitHub-Api-Version"]).toBe("2022-11-28");
+    }
+  });
+
+  it("does not pass Link headers through (GitHub page links would 404)", async () => {
     fakeFetch({
       keys: [jwk],
       github: () =>
@@ -513,10 +554,36 @@ describe("forwarding", () => {
         }),
     });
     const res = await call("/gh/api/v3/repos/comdotlinux/blog/pulls");
-    expect(res.headers.get("Link")).toBe(
-      `<${ORIGIN}/gh/api/v3/repositories/1/pulls?page=2>; rel="next"`
-    );
+    expect(res.headers.get("Link")).toBeNull();
   });
+});
+
+describe("View on GitHub links", () => {
+  it.each([
+    ["/gh/comdotlinux/blog", "https://github.com/comdotlinux/blog"],
+    [
+      "/gh/comdotlinux/blog/blob/main/src/content/posts/a.md?plain=1",
+      "https://github.com/comdotlinux/blog/blob/main/src/content/posts/a.md?plain=1",
+    ],
+  ])("redirects %s without a token or GitHub call", async (path, location) => {
+    const { fn } = fakeFetch({ keys: [jwk] });
+    const res = await proxy.onRequest({
+      request: new Request(`${ORIGIN}${path}`),
+      env: {},
+    });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("Location")).toBe(location);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it.each(["/gh/comdotlinux/blog-other", "/gh/other/blog"])(
+    "does not redirect %s",
+    async path => {
+      fakeFetch({ keys: [jwk] });
+      const res = await call(path);
+      expect(res.status).toBe(404);
+    }
+  );
 });
 
 describe("shims", () => {
