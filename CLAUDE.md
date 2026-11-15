@@ -205,6 +205,10 @@ The production site is gated at the edge, as in the bio repo: no page is served 
 - Trade-off the user accepted: search engines and link-preview bots cannot read post pages.
 - Local dev, `astro preview`, e2e and Lighthouse run without the gate (Functions only run on Cloudflare). Unit tests: `tests/functions/turnstile.test.ts`.
 
+### CMS (`cms/`, Pages project `blog-cms`)
+
+Sveltia CMS at `cms.blog.kulkarni.cloud/admin/`, behind Cloudflare Access. Access is the only login: `cms/functions/gh/[[path]].ts` verifies the Access JWT and proxies Sveltia's GitHub calls with a GitHub App installation token held server side. Production settings `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, `GITHUB_APP_PRIVATE_KEY` (secret), `OWNER_EMAIL` (secret) are typed by the owner; details in `cms/README.md` and `cms/AGENTS.md`.
+
 ## Static Assets
 
 Images for blog posts are stored in `public/assets/` organized by date:

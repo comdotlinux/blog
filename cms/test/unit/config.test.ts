@@ -21,6 +21,10 @@ describe("config.yml", () => {
       name: "github",
       repo: "comdotlinux/blog",
       branch: "main",
+      base_url: "https://cms.blog.kulkarni.cloud",
+      auth_endpoint: "auth",
+      api_root: "https://cms.blog.kulkarni.cloud/gh/api/v3",
+      auth_methods: ["oauth"],
     });
     expect(config.publish_mode).toBe("editorial_workflow");
   });

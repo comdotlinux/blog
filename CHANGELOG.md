@@ -1,3 +1,51 @@
+## 2026-11-15 14:22
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.1% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 89%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None for the blog (one /about run at 89%, others 99%). Live site not measured (Turnstile gate). CMS checks: format clean, 173 unit, 2 integration, 2 e2e passed. `blog-cms` preview build log: "Found Functions directory at /functions. Uploading.", `uses_functions: true`.
+
+Changes: CMS proxy review fixes: also reject `%2E` and `%5C` in proxied paths, drop the `Link` header (GitHub page links use `/repositories/<id>/` and would 404), redirect Sveltia's "View on GitHub" links (`/gh/comdotlinux/blog/...`) to github.com; tests for query-string forwarding, `User-Agent` and API version on every upstream call, `update-branch`, `blog-other` and ref rules; README notes on Publish, the 24 h Access session and the live check order.
+
+## 2026-11-15 14:12
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.6% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 97%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None for the blog. Live site not measured (Turnstile gate). CMS checks: format clean, 159 unit, 2 integration, 2 e2e passed; local `wrangler pages dev` compiles `cms/functions` (503 without settings, 401 without or with a forged Access JWT, 403 cross-site).
+
+Changes: CMS sign-in through Cloudflare Access only. New Pages Function `cms/functions/gh/[[path]].ts` verifies the Access JWT and proxies Sveltia's GitHub calls with a GitHub App installation token held server side (path, write and GraphQL mutation allow-lists, no DELETE or merges, commits only on `cms/` branches); static popup `cms/public/auth.html` completes Sveltia's handshake with a placeholder token; `config.yml` gets `base_url`, `auth_endpoint`, `api_root`, `auth_methods`. Needs the GitHub App and Production settings from `cms/README.md` before it works.
+
 ## 2026-11-15 11:55
 
 | Check | Status | Details |

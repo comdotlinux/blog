@@ -11,7 +11,7 @@ export default defineConfig({
     { name: "integration", testMatch: "integration.spec.ts" },
     {
       name: "e2e",
-      testMatch: "smoke.spec.ts",
+      testMatch: ["smoke.spec.ts", "auth.spec.ts"],
       // The admin shell loads Sveltia from the unpkg CDN; one retry absorbs a CDN blip.
       retries: 1,
       use: { ...devices["Desktop Chrome"] },
