@@ -10,7 +10,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  blog-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      blog: ${{ steps.filter.outputs.blog }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes outside the CMS
+        id: filter
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "blog=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --name-only "$BASE" "$GITHUB_SHA" | grep -qvE '^(cms/|\.github/workflows/cms\.yml$)'; then
+            echo "blog=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "blog=false" >> "$GITHUB_OUTPUT"
+          fi
+
   test:
+    needs: blog-changes
+    if: ${{ !cancelled() && (needs.blog-changes.result != 'success' || needs.blog-changes.outputs.blog == 'true') }}
     runs-on: ubuntu-latest
 
     steps:

@@ -61,6 +61,9 @@ export default [
       ".husky/",
       ".vscode/",
       "public/",
+      "cms/",
+      ".claude/",
+      ".trash/",
     ],
   },
 ];

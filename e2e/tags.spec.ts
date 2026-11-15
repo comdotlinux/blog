@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { tags } from "../tests/helpers/published-posts";
 
 test.describe("Tags Page", () => {
   test("loads tags page", async ({ page }) => {
@@ -6,10 +7,10 @@ test.describe("Tags Page", () => {
     await expect(page).toHaveTitle("Tags | Developer Musings");
   });
 
-  test("lists all 14 tags", async ({ page }) => {
+  test("lists all published tags", async ({ page }) => {
     await page.goto("/tags/");
     await expect(page.locator('#main-content a[href^="/tags/"]')).toHaveCount(
-      14
+      tags.length
     );
   });
 

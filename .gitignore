@@ -49,3 +49,5 @@ pnpm-debug.log*
 
 # openidea notes
 .openidea/
+.dev.vars
+.trash/

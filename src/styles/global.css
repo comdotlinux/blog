@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source not "../../cms";
 @import "./theme.css";
 @import "./typography.css";
 @import "rehype-callouts/theme/obsidian";

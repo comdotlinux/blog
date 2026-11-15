@@ -1,14 +1,19 @@
 import { test, expect } from "@playwright/test";
+import { published } from "../tests/helpers/published-posts";
 
 test.describe("Posts Page", () => {
   test("listing shows perPage (3) posts", async ({ page }) => {
     await page.goto("/posts/");
-    await expect(page.locator("#main-content ul > li")).toHaveCount(3);
+    await expect(page.locator("#main-content ul > li")).toHaveCount(
+      Math.min(3, published.length)
+    );
   });
 
   test("listing paginates to /posts/2/", async ({ page }) => {
     await page.goto("/posts/2/");
-    await expect(page.locator("#main-content ul > li")).toHaveCount(2);
+    await expect(page.locator("#main-content ul > li")).toHaveCount(
+      Math.min(3, published.length - 3)
+    );
   });
 
   test("can navigate to individual post", async ({ page }) => {
