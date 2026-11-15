@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
+import { published } from "./helpers/published-posts";
 
 const distDir = join(process.cwd(), "dist");
 
@@ -69,7 +70,7 @@ describe("Build Output", () => {
     const pngs = readdirSync(postsDir)
       .map(d => join(postsDir, d, "index.png"))
       .filter(existsSync);
-    expect(pngs).toHaveLength(5);
+    expect(pngs).toHaveLength(published.filter(p => !p.ogImage).length);
     for (const png of pngs) {
       expect(readFileSync(png).subarray(0, 8)).toEqual(
         Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])

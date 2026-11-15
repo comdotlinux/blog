@@ -1,3 +1,27 @@
+## 2026-11-15 07:58
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.8% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None. Live site not measured. A stub `cms/src/x.tsx` changed the Tailwind CSS hash until `@source not "../../cms"` was added; hashes then matched the baseline. A temporary sixth post with a new tag passed build, unit and e2e.
+
+Changes: Isolate the planned `cms/` directory from the blog (tsconfig, ESLint, Tailwind source, `blog-changes` CI filter); derive the post, tag and RSS counts in four tests from `src/content/posts` via `tests/helpers/published-posts.ts`.
+
 ## 2026-11-15 00:32
 
 | Check | Status | Details |

@@ -7,7 +7,8 @@
     "old-posts",
     ".lighthouseci",
     "playwright-report",
-    "test-results"
+    "test-results",
+    "cms"
   ],
   "compilerOptions": {
     "paths": {

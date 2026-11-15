@@ -16,6 +16,7 @@ Unit tests need no network: offline, the Google font provider in `astro.config.t
 ## Subdirectories
 | Directory | Purpose |
 |-----------|---------|
+| `helpers/` | `published-posts.ts` reads `../src/content/posts` and exports `published` and `tags`; the count-coupled tests derive expected values from it |
 | `utils/` | Tests for `src/utils/` (see `utils/AGENTS.md`) |
 | `functions/` | `turnstile.test.ts`: session cookie signing, public-path list and middleware branches of `../functions/` |
 
