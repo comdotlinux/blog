@@ -43,3 +43,5 @@ curl -sL https://unpkg.com/@sveltia/cms@<version>/dist/sveltia-cms.js | openssl 
 ```
 
 Then run all tests above.
+
+<!-- preview probe 2026-11-15T10:43:09Z: this PR is closed, not merged -->
