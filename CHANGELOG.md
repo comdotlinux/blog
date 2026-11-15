@@ -1,3 +1,27 @@
+## 2026-11-15 08:43
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.7% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 99% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None for the blog. Live site not measured (Turnstile gate). CMS checks in `cms/`: format clean, 17 unit, 2 integration, 1 e2e smoke, compat-check passed (run locally with `CMS_PORT=8789` because another local service holds 8787).
+
+Changes: Add the Sveltia CMS admin in `cms/` (pinned 0.266.0 with SRI, editorial workflow, date-only dates, empty optional fields omitted), its unit, integration, e2e and compat tests, the content guard, and the `CMS` workflow (`cms-changes`, `cms-test`, `cms-compat`, `content-guard`).
+
 ## 2026-11-15 07:58
 
 | Check | Status | Details |

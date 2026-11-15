@@ -1,0 +1,130 @@
+name: CMS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  cms-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      cms: ${{ steps.filter.outputs.cms }}
+      posts: ${{ steps.filter.outputs.posts }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Detect CMS and post changes
+        id: filter
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "cms=true" >> "$GITHUB_OUTPUT"
+            echo "posts=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          changed="$(git diff --name-only "$BASE" "$GITHUB_SHA")"
+          if grep -qE '^(cms/|\.github/workflows/cms\.yml$)' <<<"$changed"; then
+            echo "cms=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cms=false" >> "$GITHUB_OUTPUT"
+          fi
+          if grep -qE '^src/content/posts/' <<<"$changed"; then
+            echo "posts=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "posts=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  cms-test:
+    needs: cms-changes
+    if: ${{ !cancelled() && (needs.cms-changes.result != 'success' || needs.cms-changes.outputs.cms == 'true') }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cms
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install tools from mise.toml (Node.js, Bun)
+        uses: jdx/mise-action@v5
+
+      - name: Check cms/.nvmrc matches mise.toml
+        run: test "v$(cat .nvmrc)" = "$(node --version)" || { echo "cms/.nvmrc ($(cat .nvmrc)) differs from mise.toml node ($(node --version)); Cloudflare Pages reads cms/.nvmrc"; exit 1; }
+
+      - name: Install CMS test dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check formatting
+        run: bun run format:check
+
+      - name: Unit tests
+        run: bun run test:unit
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Integration tests (static admin served locally)
+        run: bun run test:integration
+
+      - name: E2E smoke (loads Sveltia from the CDN)
+        run: bun run test:e2e
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: cms-playwright-results
+          path: cms/test-results/
+          retention-days: 7
+
+  cms-compat:
+    needs: cms-changes
+    if: ${{ !cancelled() && (needs.cms-changes.result != 'success' || needs.cms-changes.outputs.cms == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install tools from mise.toml (Node.js, Bun)
+        uses: jdx/mise-action@v5
+
+      - name: Install blog dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build the blog with the CMS fixture and golden posts
+        run: bash cms/scripts/compat-check.sh
+
+  content-guard:
+    needs: cms-changes
+    if: ${{ !cancelled() && (needs.cms-changes.result != 'success' || needs.cms-changes.outputs.posts == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install tools from mise.toml (Node.js, Bun)
+        uses: jdx/mise-action@v5
+
+      - name: Install blog dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build the blog (schema check of every post)
+        run: bun run build
+
+      - name: Check posts for CMS serializer damage
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: bash cms/scripts/content-guard.sh "$BASE"

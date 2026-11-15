@@ -1,0 +1,39 @@
+# Sveltia CMS configuration. Reference: https://sveltiacms.app/en/docs
+backend:
+  name: github
+  repo: comdotlinux/blog
+  branch: main
+# Each new post gets its own branch cms/posts/<slug> and a pull request.
+publish_mode: editorial_workflow
+output:
+  # Without this every save writes `modDatetime: ''`, which the blog schema rejects.
+  omit_empty_optional_fields: true
+media_folder: public/assets
+public_folder: /assets
+collections:
+  - name: posts
+    label: Posts
+    folder: src/content/posts
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: author, label: Author, widget: string, default: comdotlinux }
+      - name: pubDatetime
+        label: Published
+        widget: datetime
+        time_format: false
+        date_format: YYYY-MM-DD
+      - name: modDatetime
+        label: Modified
+        widget: datetime
+        time_format: false
+        date_format: YYYY-MM-DD
+        required: false
+      - { name: featured, label: Featured, widget: boolean, default: false }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+      - { name: tags, label: Tags, widget: list }
+      - { name: description, label: Description, widget: string }
+      - { name: body, label: Body, widget: markdown, modes: [raw, rich_text] }
