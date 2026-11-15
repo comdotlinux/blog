@@ -1,0 +1,20 @@
+{
+  "name": "blog-cms",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.4.4",
+  "scripts": {
+    "serve": "python3 -m http.server ${CMS_PORT:-8787} --bind 127.0.0.1 --directory public",
+    "format:check": "prettier --check .",
+    "test:unit": "vitest run",
+    "test:integration": "playwright test --project=integration",
+    "test:e2e": "playwright test --project=e2e",
+    "test:compat": "bash scripts/compat-check.sh"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "prettier": "3.9.10",
+    "vitest": "5.1.0",
+    "yaml": "2.9.1"
+  }
+}
