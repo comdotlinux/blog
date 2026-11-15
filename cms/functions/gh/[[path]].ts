@@ -170,9 +170,15 @@ export async function appJwt(
   return `${unsigned}.${toB64url(sig)}`;
 }
 
+/** A token-mint failure whose message is safe to show the owner. */
+export class TokenError extends Error {}
+
 let installation: { token: string; expiresAt: number } | undefined;
 
-async function installationToken(env: Required<Env>, now: number) {
+async function installationToken(
+  env: Required<Env>,
+  now: number
+): Promise<string> {
   if (installation && installation.expiresAt - now > 300)
     return installation.token;
   const res = await fetch(
@@ -195,8 +201,19 @@ async function installationToken(env: Required<Env>, now: number) {
     }
   );
   if (!res.ok) {
-    console.error("cms proxy: installation token request failed", res.status);
-    return undefined;
+    // GitHub's error message names the cause (unknown installation, permissions not granted) and holds no secret.
+    const detail = await res
+      .json()
+      .then(b => String((b as { message?: unknown }).message ?? ""))
+      .catch(() => "");
+    console.error(
+      "cms proxy: installation token request failed",
+      res.status,
+      detail
+    );
+    throw new TokenError(
+      `GitHub answered ${res.status}${detail ? `: ${detail.slice(0, 200)}` : ""}`
+    );
   }
   const body = (await res.json()) as { token: string; expires_at: string };
   installation = {
@@ -401,11 +418,20 @@ export async function onRequest({
     return json(405, "Method Not Allowed");
   }
 
-  const token = await installationToken(env, now).catch(() => {
-    console.error("cms proxy: installation token could not be created");
-    return undefined;
-  });
-  if (!token) return json(502, "GitHub token unavailable");
+  let token: string;
+  try {
+    token = await installationToken(env, now);
+  } catch (error) {
+    const reason =
+      error instanceof TokenError
+        ? error.message
+        : "the private key could not be used (expected PKCS#8, BEGIN PRIVATE KEY)";
+    console.error(
+      "cms proxy: installation token could not be created:",
+      reason
+    );
+    return json(502, `GitHub token unavailable: ${reason}`);
+  }
 
   // Installation tokens get 403 on /user, and GitHub omits `permissions` for them; Sveltia needs both.
   const upstreamRaw = target.path === "/user" ? `/users/${OWNER}` : target.raw;
