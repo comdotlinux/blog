@@ -63,6 +63,7 @@ export default [
       "public/",
       "cms/",
       ".claude/",
+      ".omc/",
       ".trash/",
     ],
   },

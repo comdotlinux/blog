@@ -1,3 +1,27 @@
+## 2026-11-15 11:55
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Lint | ✓ PASS | 0 errors |
+| Build | ✓ PASS | 27 pages built, 5 pages indexed (Pagefind) |
+| Unit Tests | ✓ PASS | 75 tests passed |
+| E2E Tests | ✓ PASS | 96 tests passed |
+| Lighthouse | ✓ PASS | 99.8% performance (avg) |
+
+### Lighthouse Performance (local build)
+
+| Page | Scores (3 runs) |
+|------|-----------------|
+| / (index) | 100%, 100%, 100% |
+| /about | 99%, 99%, 99% |
+| /posts | 100%, 100%, 100% |
+| /archives (soft 404, not linked) | 100%, 100%, 100% |
+| /404 | 100%, 100%, 100% |
+
+**Diagnostics:** None for the blog. Live site not measured (Turnstile gate). CMS checks: format clean, 18 unit, 2 integration passed.
+
+Changes: Opt the Sveltia script out of Cloudflare Rocket Loader (`data-cfasync="false"`; Rocket Loader is on for the zone and kept Sveltia from starting, leaving a blank admin page) with a unit test; ESLint ignores `.omc/` (local agent notes, never committed).
+
 ## 2026-11-15 08:43
 
 | Check | Status | Details |
