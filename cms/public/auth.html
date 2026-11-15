@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Blog CMS sign-in</title>
+  </head>
+  <body>
+    <p>You can close this window.</p>
+    <!-- Completes Sveltia's sign-in handshake. Cloudflare Access is the login; the token is a
+         placeholder because the /gh/ proxy holds the real GitHub credential. -->
+    <script data-cfasync="false">
+      (() => {
+        const opener = window.opener;
+        if (!opener) return;
+        window.addEventListener("message", event => {
+          if (
+            event.origin !== location.origin ||
+            event.source !== opener ||
+            event.data !== "authorizing:github"
+          )
+            return;
+          opener.postMessage(
+            'authorization:github:success:{"token":"cf-access","provider":"github"}',
+            location.origin
+          );
+        });
+        opener.postMessage("authorizing:github", location.origin);
+      })();
+    </script>
+  </body>
+</html>
